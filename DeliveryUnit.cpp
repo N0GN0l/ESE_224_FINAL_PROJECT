@@ -1,6 +1,6 @@
 // DeliveryUnit.cpp
 // ESE 224 Fall 2026 Final Project (Part II) starter code
-// Team members: TODO
+// Team members: Ella Chen, Daniel Zhou, Logan Jeong
 //
 // Much of this is your Part I Drone code, moved into the base class (Section 3.2).
 
@@ -13,7 +13,9 @@ using namespace std;
 DeliveryUnit::DeliveryUnit()
 {
     // TODO: the Part I defaults
+    name = " ";
     ID = -1;
+    model = "";
     battery = 100.0;
     maxPayload = 0.0;
     position[0] = 0;

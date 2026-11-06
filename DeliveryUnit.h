@@ -1,6 +1,6 @@
 // DeliveryUnit.h
 // ESE 224 Fall 2026 Final Project (Part II) starter code
-// Team members: TODO
+// Team members: Ella Chen, Daniel Zhou, Logan Jeong
 
 #ifndef DELIVERYUNIT_H
 #define DELIVERYUNIT_H

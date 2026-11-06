@@ -1,6 +1,6 @@
 // Queue.h
 // ESE 224 Fall 2026 Final Project (Part II) starter code
-// Team members: TODO
+// Team members: Ella Chen, Daniel Zhou, Logan Jeong
 //
 // A first-in first-out queue built on your own singly linked list (Section 4.1).
 // Templates must be written entirely in the header file.
