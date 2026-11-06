@@ -38,6 +38,14 @@ int DeliveryUnit::getDeliveriesCompleted() const { return deliveriesCompleted; }
 int DeliveryUnit::getPosition(int index) const
 {
     // TODO: as in Part I
+    if(index == 0)
+    {
+        return position[0];
+    }
+    else if(index == 1)
+    {
+        return position[1];
+    }
     return -1;
 }
 
