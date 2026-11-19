@@ -26,7 +26,9 @@ public:
 
     ~Queue()
     {
-        // TODO: free every node (hint: clear())
+        clear();
+        frontNode = nullptr;
+        backNode = nullptr;
     }
 
     // A queue owns its nodes, so copying is not allowed
@@ -35,7 +37,15 @@ public:
 
     void enqueue(const T& item)
     {
-        // TODO: add a new node at the back
+        if(frontNode == nullptr)
+        {
+            frontNode = new Node(item, nullptr);
+            backNode = frontNode;
+        }
+        else {
+            backNode->next = new Node(item, nullptr);
+            backNode = backNode->next;
+        }
     }
 
     bool dequeue(T& item)
