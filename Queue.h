@@ -47,6 +47,8 @@ public:
             backNode->next = new Node(item, nullptr);
             backNode = backNode->next;
         }
+
+        count++;
     }
 
     bool dequeue(T& item)
@@ -61,6 +63,8 @@ public:
         frontNode = frontNode->next;
         item = frontNode->data;
         delete(temp);
+
+        count--;
         return true;
     }
 
@@ -80,7 +84,7 @@ public:
     bool isEmpty() const { return frontNode == nullptr; }
     int size() const { return count; }
 
-    void clear()
+    void clear()    //Clears the queue
     {
         while(frontNode->next != nullptr)
         {
