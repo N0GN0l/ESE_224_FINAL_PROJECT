@@ -82,7 +82,16 @@ public:
 
     void clear()
     {
-        // TODO: remove every node
+        while(frontNode->next != nullptr)
+        {
+            Node* temp = frontNode;
+            frontNode = frontNode->next;
+            delete(temp);
+        }
+
+        frontNode = nullptr;
+        backNode = nullptr;
+        count = 0;
     }
 };
 
