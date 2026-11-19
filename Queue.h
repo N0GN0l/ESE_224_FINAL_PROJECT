@@ -38,7 +38,7 @@ public:
 
     void enqueue(const T& item)
     {
-        if(frontNode == nullptr)
+        if(isEmpty())
         {
             frontNode = new Node(item, nullptr);
             backNode = frontNode;
@@ -51,7 +51,7 @@ public:
 
     bool dequeue(T& item)
     {
-        if(frontNode == nullptr)
+        if(isEmpty())
         {
             std::cerr<<"Queue is empty, cannot dequeue"<<std::endl;
             return false;
@@ -66,7 +66,7 @@ public:
 
     bool front(T& item) const
     {
-        if(frontNode == nullptr)
+        if(isEmpty())
         {
             std::cerr<<"Queue is empty, cannot dequeue"<<std::endl;
             return false;
