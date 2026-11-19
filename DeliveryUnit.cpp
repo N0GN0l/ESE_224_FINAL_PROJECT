@@ -5,10 +5,10 @@
 // Much of this is your Part I Drone code, moved into the base class (Section 3.2).
 
 #include "DeliveryUnit.h"
+#include "myDouble.h"
 #include <iostream>
 #include <iomanip>
 #include <cmath>
-using namespace std;
 
 DeliveryUnit::DeliveryUnit()
 {
@@ -27,12 +27,12 @@ DeliveryUnit::DeliveryUnit()
 DeliveryUnit::~DeliveryUnit() {}
 
 // ---------- Accessors ----------
-string DeliveryUnit::getName() const { return name; }
+std::string DeliveryUnit::getName() const { return name; }
 int DeliveryUnit::getID() const { return ID; }
-string DeliveryUnit::getModel() const { return model; }
+std::string DeliveryUnit::getModel() const { return model; }
 double DeliveryUnit::getBattery() const { return battery; }
 double DeliveryUnit::getMaxPayload() const { return maxPayload; }
-string DeliveryUnit::getStatus() const { return status; }
+std::string DeliveryUnit::getStatus() const { return status; }
 int DeliveryUnit::getDeliveriesCompleted() const { return deliveriesCompleted; }
 
 int DeliveryUnit::getPosition(int index) const
@@ -49,7 +49,7 @@ int DeliveryUnit::getPosition(int index) const
 }
 
 // ---------- Mutators (validate as in Part I; setMaxPayload: 0 < p <= MAX_PAYLOAD_LIMIT) ----------
-void DeliveryUnit::setName(const string& n) { name = n; }
+void DeliveryUnit::setName(const std::string& n) { name = n; }
 
 bool DeliveryUnit::setID(int id) 
 {
@@ -90,7 +90,7 @@ bool DeliveryUnit::setPosition(int index, int value)
     }
     return false;
 }
-bool DeliveryUnit::setStatus(const string& s) 
+bool DeliveryUnit::setStatus(const std::string& s) 
 {
     if(s == "IDLE" || s == "CHARGING" || s == "MAINTENANCE")
     {
@@ -103,27 +103,74 @@ bool DeliveryUnit::setStatus(const string& s)
 // ---------- Shared behaviour ----------
 double DeliveryUnit::distanceTo(int x, int y) const
 {
-    // TODO
+    double distance = 0;
+    //myDouble wraps the differences so ^2 means squaring
+    myDouble deltaY(position[1] - y);
+    myDouble deltaX(position[0] - x);
+    distance = sqrt((deltaX^2) + (deltaY^2));
+    return distance;
     return 0.0;
 }
 
 bool DeliveryUnit::canDeliver(int x, int y, double weight) const
 {
-    // TODO: as in Part I, but call the virtual batteryNeeded so each unit type uses its own formula
+    if((status == "IDLE") && (weight <= maxPayload) && (battery - batteryNeeded(x, y, weight) >= SAFETY_RESERVE))
+    {
+        return true;
+    }
     return false;
 }
 
 void DeliveryUnit::completeDelivery(int x, int y, double weight)
 {
-    // TODO: as in Part I
+    //double-check the delivery is still possible
+    if(canDeliver(x, y, weight))
+    {
+        //use up battery, move to the destination, and count the delivery
+        battery -= batteryNeeded(x, y, weight);
+        position[0] = x;
+        position[1] = y;
+        deliveriesCompleted++;
+
+        //send it to charge if the battery got too low
+        if(battery < LOW_BATTERY)
+        {
+            setStatus("CHARGING");
+        }
+    }
+    else
+    {
+        std::cout<<"Drone cannot complete the delivery"<<std::endl;
+    }
 }
 
-void DeliveryUnit::undoDelivery(double oldBattery, int oldX, int oldY, const string& oldStatus)
+void DeliveryUnit::undoDelivery(double oldBattery, int oldX, int oldY, const std::string& oldStatus)
 {
-    // TODO: restore battery, position, and status; deliveriesCompleted goes down by 1 (never below 0)
+    if((deliveriesCompleted - 1) >= 0)
+    {
+        deliveriesCompleted--;
+    }
+    else {
+        std::cout<<"No deliveries have been completed, cannot undo something that never happened"<<std::endl;
+        return;
+    }
+
+    setBattery(oldBattery);
+    setPosition(0, oldX);
+    setPosition(1, oldY);
+    setStatus(oldStatus);
 }
 
 void DeliveryUnit::display() const
 {
     // TODO: print [type()] and every member with a label
+    std::cout<<"[name]"<<getName() <<std::endl;
+    std::cout<<"[ID]"<<getID() <<std::endl;
+    std::cout<<"[model]"<<getModel() <<std::endl;
+    std::cout<<"[battery]"<<getBattery() <<std::endl;
+    std::cout<<"[max payload]"<<getMaxPayload() <<std::endl;
+    std::cout<<"[X position]"<<getPosition(0) <<std::endl;
+    std::cout<<"[Y position]"<<getPosition(1) <<std::endl;
+    std::cout<<"[status]"<<getStatus() <<std::endl;
+    std::cout<<"[deliveries completed]"<<getDeliveriesCompleted() <<std::endl;
 }

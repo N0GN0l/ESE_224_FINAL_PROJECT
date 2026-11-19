@@ -6,7 +6,6 @@
 #define DELIVERYUNIT_H
 
 #include <string>
-using namespace std;
 
 // Constants (Part I constants plus the HeavyDrone ones)
 const double BATTERY_PER_UNIT = 2.0;        // Drone: battery % per grid unit with no payload
@@ -21,13 +20,13 @@ const double MAX_PAYLOAD_LIMIT = 25.0;      // no unit can be rated above 25 kg
 class DeliveryUnit
 {
 protected:
-    string name;
+    std::string name;
     int ID;
-    string model;
+    std::string model;
     double battery;
     double maxPayload;
     int position[2];
-    string status;
+    std::string status;
     int deliveriesCompleted;
 
 public:
@@ -35,33 +34,33 @@ public:
     virtual ~DeliveryUnit();
 
     // Accessors
-    string getName() const;
+    std::string getName() const;
     int getID() const;
-    string getModel() const;
+    std::string getModel() const;
     double getBattery() const;
     double getMaxPayload() const;
     int getPosition(int index) const;
-    string getStatus() const;
+    std::string getStatus() const;
     int getDeliveriesCompleted() const;
 
     // Mutators (print an error, leave the member unchanged, return false if invalid)
-    void setName(const string& n);
+    void setName(const std::string& n);
     bool setID(int id);
-    virtual bool setModel(const string& m) = 0;   // each unit type accepts different models
+    virtual bool setModel(const std::string& m) = 0;   // each unit type accepts different models
     bool setBattery(double b);
     bool setMaxPayload(double p);
     bool setPosition(int index, int value);
-    bool setStatus(const string& s);
+    bool setStatus(const std::string& s);
 
     // Polymorphic behaviour
     virtual double batteryNeeded(int x, int y, double weight) const = 0;
-    virtual string type() const = 0;              // "Drone" or "Heavy"
+    virtual std::string type() const = 0;              // "Drone" or "Heavy"
 
     // Shared behaviour (uses the virtual functions above)
     double distanceTo(int x, int y) const;
     bool canDeliver(int x, int y, double weight) const;
     void completeDelivery(int x, int y, double weight);
-    void undoDelivery(double oldBattery, int oldX, int oldY, const string& oldStatus);
+    void undoDelivery(double oldBattery, int oldX, int oldY, const std::string& oldStatus);
     void display() const;
 };
 
