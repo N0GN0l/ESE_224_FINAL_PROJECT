@@ -21,30 +21,31 @@ Fleet::~Fleet()
 // ---------- Linked list ----------
 bool Fleet::addUnit(DeliveryUnit* u)
 {
-    UnitNode* temp = new UnitNode(u, nullptr);
-    if(head == nullptr)
-    {
-        head = temp;
-        return true;
-    }
+    // UnitNode* temp = new UnitNode(u,nullptr);
+    // if(head == nullptr)
+    // {
+    //     head = temp;
+    //     return true;
+    // }
 
-    UnitNode* curr = head;
-    UnitNode* prev = curr;
-    while(temp->unit->getID() > curr->unit->getID())
-    {
-        if(temp->unit->getID() == curr->unit->getID())
-        {
-            std::cerr<<"Cannot add delivery units with duplicate ID's"<<std::endl;
-            delete temp;
-            delete u;
-            return false;
-        }
-        prev = curr;
-        curr = curr->next;
-    }
+    // UnitNode* curr = head;
+    // UnitNode* prev = curr;
+    // while(temp->unit->getID() > curr->unit->getID())
+    // {
+    //     if(temp->unit->getID() == curr->unit->getID())
+    //     {
+    //         std::cerr<<"Cannot add delivery units with duplicate ID's"<<std::endl;
+    //         delete temp;
+    //         delete u;
+    //         return false;
+    //     }
+    //     prev = curr;
+    //     curr = curr->next;
+    // }
 
-    prev->next = temp;
-    temp->next = curr;
+    // prev->next = temp;
+    // temp->next = curr;
+    return true;
     //Make this work with the binary tree!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 
     // TODO: sorted insert by ID and insert into 'index'; on a duplicate ID print a message, delete u, return false

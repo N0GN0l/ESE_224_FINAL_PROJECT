@@ -124,7 +124,6 @@ double DeliveryUnit::distanceTo(int x, int y) const
     myDouble deltaX(position[0] - x);
     distance = sqrt((deltaX^2) + (deltaY^2));
     return distance;
-    return 0.0;
 }
 
 bool DeliveryUnit::canDeliver(int x, int y, double weight) const
