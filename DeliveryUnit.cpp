@@ -80,7 +80,7 @@ bool DeliveryUnit::setMaxPayload(double p)
             return true;
         }
         else {
-            std::cerr<<"Max payload must be below the defined limti"<<std::endl;
+            std::cerr<<"Max payload must be below the defined limit"<<std::endl;
         }
     }
     else {
