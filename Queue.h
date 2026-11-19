@@ -8,6 +8,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
+#include <iostream>
 template <typename T>
 class Queue
 {
@@ -50,8 +51,17 @@ public:
 
     bool dequeue(T& item)
     {
-        // TODO: remove the front node, copy its data into item, return true; false if empty
-        return false;
+        if(frontNode == nullptr)
+        {
+            std::cerr<<"Queue is empty, cannot dequeue"<<std::endl;
+            return false;
+        }
+
+        Node* temp = frontNode;
+        frontNode = frontNode->next;
+        item = frontNode->data;
+        delete(temp);
+        return true;
     }
 
     bool front(T& item) const
