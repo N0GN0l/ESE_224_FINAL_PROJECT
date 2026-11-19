@@ -74,10 +74,18 @@ bool DeliveryUnit::setMaxPayload(double p)
 { 
     if(p > 0)
     {
-        maxPayload = p;
-        return true;
+        if(p <= MAX_PAYLOAD_LIMIT)
+        {
+            maxPayload = p;
+            return true;
+        }
+        else {
+            std::cerr<<"Max payload must be below the defined limti"<<std::endl;
+        }
     }
-    std::cerr<<"Max payload must be positive"<<std::endl;
+    else {
+        std::cerr<<"Max payload must be positive"<<std::endl;
+    }
     return false;
 }
 bool DeliveryUnit::setPosition(int index, int value) 
