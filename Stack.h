@@ -26,6 +26,7 @@ public:
     ~Stack()
     {
         // TODO: free every node (hint: clear())
+        clear();
     }
 
     Stack(const Stack&) = delete;
@@ -34,6 +35,16 @@ public:
     void push(const T& item)
     {
         // TODO: add a new node on top
+        if(topNode == nullptr)
+        {
+            topNode = new Node(item, nullptr);
+            return;
+        }
+
+        Node* temp = topNode;
+        topNode = new Node(item , temp);
+
+        count++;
     }
 
     bool pop(T& item)
