@@ -8,6 +8,8 @@
 #ifndef STACK_H
 #define STACK_H
 
+#include <iostream>
+
 template <typename T>
 class Stack
 {
@@ -49,8 +51,22 @@ public:
 
     bool pop(T& item)
     {
-        // TODO: remove the top node, copy its data into item, return true; false if empty
         return false;
+        if(isEmpty())
+        {
+            std::cerr<<"Stack is empty, cannot pop"<<std::endl;
+            return false;
+        }
+        
+        Node* temp = topNode;
+        item = topNode->data;
+        
+        topNode = topNode->next;
+        
+        delete(temp);
+
+        return true;
+        // TODO: remove the top node, copy its data into item, return true; false if empty
     }
 
     bool top(T& item) const
