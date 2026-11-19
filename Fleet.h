@@ -20,6 +20,7 @@ private:
     {
         DeliveryUnit* unit;
         UnitNode* next;
+        UnitNode(DeliveryUnit* unit, UnitNode* next);
     };
     UnitNode* head;
     int count;

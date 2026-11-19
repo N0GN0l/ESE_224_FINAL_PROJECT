@@ -21,15 +21,57 @@ Fleet::~Fleet()
 // ---------- Linked list ----------
 bool Fleet::addUnit(DeliveryUnit* u)
 {
+    UnitNode* temp = new UnitNode(u, nullptr);
+    if(head == nullptr)
+    {
+        head = temp;
+        return true;
+    }
+
+    UnitNode* curr = head;
+    UnitNode* prev = curr;
+    while(temp->unit->getID() > curr->unit->getID())
+    {
+        if(temp->unit->getID() == curr->unit->getID())
+        {
+            std::cerr<<"Cannot add delivery units with duplicate ID's"<<std::endl;
+            delete temp;
+            delete u;
+            return false;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+
+    prev->next = temp;
+    temp->next = curr;
+    //Make this work with the binary tree!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+
     // TODO: sorted insert by ID and insert into 'index'; on a duplicate ID print a message, delete u, return false
-    delete u;
-    return false;
 }
 
 bool Fleet::removeUnit(int id)
 {
+    UnitNode* curr = head;
+    UnitNode* prev;
+    while(curr->unit->getID() != id)
+    {
+        prev = curr;
+        if(curr->next == nullptr)
+        {
+            std::cerr<<"Could not find a delivery unit with the given id"<<std::endl;
+            return false;
+        }
+        curr = curr->next;
+        
+    }
+
+    delete curr->unit;
+
+    prev->next = curr->next;
+    delete curr;
+    //make this work with the binary tree!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // TODO: unlink, remove from 'index', delete the unit and the node
-    return false;
 }
 
 DeliveryUnit* Fleet::findQuiet(int id) const
