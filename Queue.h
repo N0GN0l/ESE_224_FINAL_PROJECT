@@ -72,7 +72,7 @@ public:
     {
         if(isEmpty())
         {
-            std::cerr<<"Queue is empty, cannot dequeue"<<std::endl;
+            std::cerr<<"Queue is empty, cannot access front"<<std::endl;
             return false;
         }
 
