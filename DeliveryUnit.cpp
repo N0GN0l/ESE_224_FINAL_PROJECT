@@ -58,6 +58,7 @@ bool DeliveryUnit::setID(int id)
         ID = id;
         return true;
     }
+    std::cerr<<"You must provide a positive ID"<<std::endl;
     return false; 
 }
 bool DeliveryUnit::setBattery(double b) 
@@ -67,6 +68,7 @@ bool DeliveryUnit::setBattery(double b)
         battery = b;
         return true;
     } 
+    std::cerr<<"Battery must be provided as a percentage between 0 and 100"<<std::endl;
     return false; 
 }
 bool DeliveryUnit::setMaxPayload(double p) 
@@ -76,6 +78,7 @@ bool DeliveryUnit::setMaxPayload(double p)
         maxPayload = p;
         return true;
     }
+    std::cerr<<"Max payload must be positive"<<std::endl;
     return false;
 }
 bool DeliveryUnit::setPosition(int index, int value) 
@@ -87,6 +90,10 @@ bool DeliveryUnit::setPosition(int index, int value)
             position[index] = value;
             return true;
         }
+        std::cerr<<"Value must be greater than or equal to 0"<<std::endl;
+    }
+    else {
+        std::cerr<<"Index must be either 0 or 1"<<std::endl;
     }
     return false;
 }
@@ -97,8 +104,9 @@ bool DeliveryUnit::setStatus(const std::string& s)
         status = s;
         return true;
     }
+    std::cerr<<"Status must be either 'IDLE', 'CHARGING', or 'MAINTENANCE' "<<std::endl;
     return false; 
-    }
+}
 
 // ---------- Shared behaviour ----------
 double DeliveryUnit::distanceTo(int x, int y) const
@@ -140,7 +148,7 @@ void DeliveryUnit::completeDelivery(int x, int y, double weight)
     }
     else
     {
-        std::cout<<"Drone cannot complete the delivery"<<std::endl;
+        std::cerr<<"Drone cannot complete the delivery"<<std::endl;
     }
 }
 
