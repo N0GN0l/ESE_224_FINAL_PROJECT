@@ -37,7 +37,6 @@ int DeliveryUnit::getDeliveriesCompleted() const { return deliveriesCompleted; }
 
 int DeliveryUnit::getPosition(int index) const
 {
-    // TODO: as in Part I
     if(index == 0)
     {
         return position[0];
@@ -51,11 +50,55 @@ int DeliveryUnit::getPosition(int index) const
 
 // ---------- Mutators (validate as in Part I; setMaxPayload: 0 < p <= MAX_PAYLOAD_LIMIT) ----------
 void DeliveryUnit::setName(const string& n) { name = n; }
-bool DeliveryUnit::setID(int id) { /* TODO */ return false; }
-bool DeliveryUnit::setBattery(double b) { /* TODO */ return false; }
-bool DeliveryUnit::setMaxPayload(double p) { /* TODO */ return false; }
-bool DeliveryUnit::setPosition(int index, int value) { /* TODO */ return false; }
-bool DeliveryUnit::setStatus(const string& s) { /* TODO */ return false; }
+
+bool DeliveryUnit::setID(int id) 
+{
+    if(id > 0)
+    {
+        ID = id;
+        return true;
+    }
+    return false; 
+}
+bool DeliveryUnit::setBattery(double b) 
+{
+    if(b >= 0 && b <= 100)
+    {
+        battery = b;
+        return true;
+    } 
+    return false; 
+}
+bool DeliveryUnit::setMaxPayload(double p) 
+{ 
+    if(p > 0)
+    {
+        maxPayload = p;
+        return true;
+    }
+    return false;
+}
+bool DeliveryUnit::setPosition(int index, int value) 
+{ 
+    if(index == 0 || index == 1)
+    {
+        if(value >= 0)
+        {
+            position[index] = value;
+            return true;
+        }
+    }
+    return false;
+}
+bool DeliveryUnit::setStatus(const string& s) 
+{
+    if(s == "IDLE" || s == "CHARGING" || s == "MAINTENANCE")
+    {
+        status = s;
+        return true;
+    }
+    return false; 
+    }
 
 // ---------- Shared behaviour ----------
 double DeliveryUnit::distanceTo(int x, int y) const
