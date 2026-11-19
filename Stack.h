@@ -37,7 +37,7 @@ public:
     void push(const T& item)
     {
         // TODO: add a new node on top
-        if(topNode == nullptr)
+        if(isEmpty())
         {
             topNode = new Node(item, nullptr);
             return;
@@ -57,7 +57,7 @@ public:
             std::cerr<<"Stack is empty, cannot pop"<<std::endl;
             return false;
         }
-        
+
         Node* temp = topNode;
         item = topNode->data;
         
