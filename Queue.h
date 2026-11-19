@@ -66,8 +66,15 @@ public:
 
     bool front(T& item) const
     {
-        // TODO: copy the front data into item without removing it
-        return false;
+        if(frontNode == nullptr)
+        {
+            std::cerr<<"Queue is empty, cannot dequeue"<<std::endl;
+            return false;
+        }
+
+        item = frontNode->data;
+        return true;
+        
     }
 
     bool isEmpty() const { return frontNode == nullptr; }
