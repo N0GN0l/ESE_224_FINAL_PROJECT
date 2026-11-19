@@ -1,6 +1,6 @@
 // main.cpp
 // ESE 224 Fall 2026 Final Project (Part II) starter code
-// Team members: TODO
+// Team members: Ella Chen, Daniel Zhou, Logan Jeong
 //
 // This skeleton compiles and shows the menu. Fill in each TODO (Section 8).
 // You can reuse your Part I login and input-checking code.

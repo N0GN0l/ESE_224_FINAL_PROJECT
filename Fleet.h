@@ -1,6 +1,6 @@
 // Fleet.h
 // ESE 224 Fall 2026 Final Project (Part II) starter code
-// Team members: TODO
+// Team members: Ella Chen, Daniel Zhou, Logan Jeong
 
 #ifndef FLEET_H
 #define FLEET_H
