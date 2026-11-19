@@ -10,7 +10,6 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
-using namespace std;
 
 Fleet::Fleet() : head(nullptr), count(0) {}
 
@@ -62,7 +61,7 @@ void Fleet::displayTree() const
 
 void Fleet::countByStatus() const { /* TODO */ }
 
-void Fleet::writeFleetToFile(const string& filename) const { /* TODO */ }
+void Fleet::writeFleetToFile(const std::string& filename) const { /* TODO */ }
 
 // ---------- Dispatch center ----------
 DeliveryUnit* Fleet::findNearestAvailable(int x, int y, double weight) const
@@ -71,38 +70,38 @@ DeliveryUnit* Fleet::findNearestAvailable(int x, int y, double weight) const
     return nullptr;
 }
 
-void Fleet::appendLog(const string& logFile, const string& line) const
+void Fleet::appendLog(const std::string& logFile, const std::string& line) const
 {
     // Prints a line and appends it to the log file
-    cout << line << endl;
-    ofstream out(logFile, ios::app);
-    out << line << endl;
+    std::cout << line << std::endl;
+    std::ofstream out(logFile, std::ios::app);
+    out << line << std::endl;
 }
 
-int Fleet::loadOrders(const string& orderFile, const string& logFile)
+int Fleet::loadOrders(const std::string& orderFile, const std::string& logFile)
 {
     // TODO: enqueue every order into 'pending' in file order; start a new, empty log file
     return 0;
 }
 
-void Fleet::processPending(const string& logFile)
+void Fleet::processPending(const std::string& logFile)
 {
     // TODO: dequeue until empty; dispatch (push a DispatchRecord first) or move to 'retry'; log each line and a summary
 }
 
-bool Fleet::undoLastDispatch(const string& logFile)
+bool Fleet::undoLastDispatch(const std::string& logFile)
 {
     // TODO: pop the last record, undoDelivery on that unit, move the order to 'retry'
     return false;
 }
 
-int Fleet::rechargeAll(const string& logFile)
+int Fleet::rechargeAll(const std::string& logFile)
 {
     // TODO: every CHARGING unit -> battery 100, IDLE
     return 0;
 }
 
-void Fleet::retryFailed(const string& logFile)
+void Fleet::retryFailed(const std::string& logFile)
 {
     // TODO: move every order from 'retry' to 'pending' (keep the order), then processPending
 }

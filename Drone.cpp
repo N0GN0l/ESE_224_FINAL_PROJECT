@@ -4,17 +4,16 @@
 
 #include "Drone.h"
 #include <iostream>
-using namespace std;
 
 Drone::Drone() : DeliveryUnit() {}
 
-Drone::Drone(const string& n, int id, const string& m, double b, double p, int x, int y, const string& s)
+Drone::Drone(const std::string& n, int id, const std::string& m, double b, double p, int x, int y, const std::string& s)
     : DeliveryUnit()
 {
     // TODO: set every member through its mutator (Section 3.3)
 }
 
-bool Drone::setModel(const string& m)
+bool Drone::setModel(const std::string& m)
 {
     // TODO: valid when m is Kestrel, Falcon, or Condor
     return false;
@@ -26,4 +25,4 @@ double Drone::batteryNeeded(int x, int y, double weight) const
     return 0.0;
 }
 
-string Drone::type() const { return "Drone"; }
+std::string Drone::type() const { return "Drone"; }

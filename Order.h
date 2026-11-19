@@ -6,7 +6,6 @@
 #define ORDER_H
 
 #include <string>
-using namespace std;
 
 // One delivery order from orders.txt
 struct Order
@@ -25,7 +24,7 @@ struct DispatchRecord
     double oldBattery;    // the unit's state just before the delivery
     int oldX;
     int oldY;
-    string oldStatus;
+    std::string oldStatus;
 };
 
 #endif

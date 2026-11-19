@@ -13,9 +13,8 @@
 #include <fstream>
 #include <string>
 #include <limits>
-using namespace std;
 
-const string LOG_FILE = "delivery_log.txt";
+const std::string LOG_FILE = "delivery_log.txt";
 
 // TODO: ask for a username and password until the pair is in users.txt; greet the user
 bool login()
@@ -25,28 +24,28 @@ bool login()
 
 // TODO: read every line of drones.txt until end of file. The first word is D (Drone) or H (HeavyDrone):
 //       create the unit with new, add it to the fleet, and print how many were loaded.
-void loadFleet(Fleet& fleet, const string& filename)
+void loadFleet(Fleet& fleet, const std::string& filename)
 {
 }
 
 void showMenu()
 {
-    cout << endl
-         << "===== SkyDrop Dispatch Center =====" << endl
-         << " 1. Display fleet (ID order)" << endl
-         << " 2. Display ID tree (traversals and height)" << endl
-         << " 3. Search by ID (linked list and tree)" << endl
-         << " 4. Add a unit" << endl
-         << " 5. Remove a unit" << endl
-         << " 6. Find nearest available unit" << endl
-         << " 7. Load orders into the pending queue" << endl
-         << " 8. Process pending orders" << endl
-         << " 9. Undo last dispatch" << endl
-         << "10. Recharge all charging units" << endl
-         << "11. Retry failed orders" << endl
-         << "12. Fleet status summary" << endl
-         << "13. Write fleet to file" << endl
-         << " 0. Quit" << endl;
+    std::cout << std::endl
+         << "===== SkyDrop Dispatch Center =====" << std::endl
+         << " 1. Display fleet (ID order)" << std::endl
+         << " 2. Display ID tree (traversals and height)" << std::endl
+         << " 3. Search by ID (linked list and tree)" << std::endl
+         << " 4. Add a unit" << std::endl
+         << " 5. Remove a unit" << std::endl
+         << " 6. Find nearest available unit" << std::endl
+         << " 7. Load orders into the pending queue" << std::endl
+         << " 8. Process pending orders" << std::endl
+         << " 9. Undo last dispatch" << std::endl
+         << "10. Recharge all charging units" << std::endl
+         << "11. Retry failed orders" << std::endl
+         << "12. Fleet status summary" << std::endl
+         << "13. Write fleet to file" << std::endl
+         << " 0. Quit" << std::endl;
 }
 
 int main()
@@ -61,8 +60,8 @@ int main()
     while (choice != 0)
     {
         showMenu();
-        cout << "Choose an option: ";
-        cin >> choice;
+        std::cout << "Choose an option: ";
+        std::cin >> choice;
         // TODO: recover from a letter (cin.clear and cin.ignore) instead of crashing or looping forever
 
         switch (choice)
@@ -72,10 +71,10 @@ int main()
             break;
         // TODO: cases 2 to 13 (table in Section 8)
         case 0:
-            cout << "Goodbye!" << endl;
+            std::cout << "Goodbye!" << std::endl;
             break;
         default:
-            cout << "Invalid option." << endl;
+            std::cout << "Invalid option." << std::endl;
         }
     }
     return 0;   // the Fleet destructor frees everything here

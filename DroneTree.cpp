@@ -7,7 +7,6 @@
 
 #include "DroneTree.h"
 #include <iostream>
-using namespace std;
 
 DroneTree::DroneTree() : root(nullptr), count(0) {}
 
@@ -54,9 +53,9 @@ bool DroneTree::removeHelper(TreeNode*& node, int id)
     return false;
 }
 
-void DroneTree::inOrder() const { inOrderHelper(root); cout << endl; }
-void DroneTree::preOrder() const { preOrderHelper(root); cout << endl; }
-void DroneTree::postOrder() const { postOrderHelper(root); cout << endl; }
+void DroneTree::inOrder() const { inOrderHelper(root); std::cout << std::endl; }
+void DroneTree::preOrder() const { preOrderHelper(root); std::cout << std::endl; }
+void DroneTree::postOrder() const { postOrderHelper(root); std::cout << std::endl; }
 
 void DroneTree::inOrderHelper(TreeNode* node) const { /* TODO */ }
 void DroneTree::preOrderHelper(TreeNode* node) const { /* TODO */ }

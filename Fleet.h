@@ -11,7 +11,6 @@
 #include "Queue.h"
 #include "Stack.h"
 #include <string>
-using namespace std;
 
 class Fleet
 {
@@ -31,7 +30,7 @@ private:
     Stack<DispatchRecord> history;      // completed dispatches, most recent on top
 
     DeliveryUnit* findQuiet(int id) const;               // list lookup without printing
-    void appendLog(const string& logFile, const string& line) const;
+    void appendLog(const std::string& logFile, const std::string& line) const;
 
 public:
     Fleet();
@@ -48,15 +47,15 @@ public:
     void displayAll() const;
     void displayTree() const;                            // three traversals and the height
     void countByStatus() const;
-    void writeFleetToFile(const string& filename) const;
+    void writeFleetToFile(const std::string& filename) const;
 
     // Dispatch center
     DeliveryUnit* findNearestAvailable(int x, int y, double weight) const;
-    int loadOrders(const string& orderFile, const string& logFile);   // fills 'pending', starts a new log
-    void processPending(const string& logFile);
-    bool undoLastDispatch(const string& logFile);
-    int rechargeAll(const string& logFile);
-    void retryFailed(const string& logFile);
+    int loadOrders(const std::string& orderFile, const std::string& logFile);   // fills 'pending', starts a new log
+    void processPending(const std::string& logFile);
+    bool undoLastDispatch(const std::string& logFile);
+    int rechargeAll(const std::string& logFile);
+    void retryFailed(const std::string& logFile);
     int pendingCount() const;
     int retryCount() const;
     int historyCount() const;

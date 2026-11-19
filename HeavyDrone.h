@@ -12,11 +12,11 @@ class HeavyDrone : public DeliveryUnit
 {
 public:
     HeavyDrone();
-    HeavyDrone(const string& n, int id, const string& m, double b, double p, int x, int y, const string& s);
+    HeavyDrone(const std::string& n, int id, const std::string& m, double b, double p, int x, int y, const std::string& s);
 
-    bool setModel(const string& m) override;                       // only "Hauler"
+    bool setModel(const std::string& m) override;                       // only "Hauler"
     double batteryNeeded(int x, int y, double weight) const override;
-    string type() const override;                                 // "Heavy"
+    std::string type() const override;                                 // "Heavy"
 };
 
 #endif

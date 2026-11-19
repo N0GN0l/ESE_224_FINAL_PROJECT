@@ -4,17 +4,16 @@
 
 #include "HeavyDrone.h"
 #include <iostream>
-using namespace std;
 
 HeavyDrone::HeavyDrone() : DeliveryUnit() {}
 
-HeavyDrone::HeavyDrone(const string& n, int id, const string& m, double b, double p, int x, int y, const string& s)
+HeavyDrone::HeavyDrone(const std::string& n, int id, const std::string& m, double b, double p, int x, int y, const std::string& s)
     : DeliveryUnit()
 {
     // TODO: set every member through its mutator (Section 3.3)
 }
 
-bool HeavyDrone::setModel(const string& m)
+bool HeavyDrone::setModel(const std::string& m)
 {
     // TODO: valid only when m is Hauler
     return false;
@@ -26,4 +25,4 @@ double HeavyDrone::batteryNeeded(int x, int y, double weight) const
     return 0.0;
 }
 
-string HeavyDrone::type() const { return "Heavy"; }
+std::string HeavyDrone::type() const { return "Heavy"; }

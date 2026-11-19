@@ -12,11 +12,11 @@ class Drone : public DeliveryUnit
 {
 public:
     Drone();
-    Drone(const string& n, int id, const string& m, double b, double p, int x, int y, const string& s);
+    Drone(const std::string& n, int id, const std::string& m, double b, double p, int x, int y, const std::string& s);
 
-    bool setModel(const string& m) override;                       // Kestrel, Falcon, or Condor
+    bool setModel(const std::string& m) override;                       // Kestrel, Falcon, or Condor
     double batteryNeeded(int x, int y, double weight) const override;
-    string type() const override;                                 // "Drone"
+    std::string type() const override;                                 // "Drone"
 };
 
 #endif
