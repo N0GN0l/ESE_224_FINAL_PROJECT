@@ -66,13 +66,19 @@ public:
         delete(temp);
 
         return true;
-        // TODO: remove the top node, copy its data into item, return true; false if empty
     }
 
     bool top(T& item) const
     {
-        // TODO: copy the top data into item without removing it
-        return false;
+        if(isEmpty())
+        {
+            std::cerr<<"Stack is empty, cannot access top"<<std::endl;
+            return false;
+        }
+
+        item = topNode->data;
+
+        return true;
     }
 
     bool isEmpty() const { return topNode == nullptr; }
@@ -81,6 +87,15 @@ public:
     void clear()
     {
         // TODO: remove every node
+        while(topNode->next != nullptr)
+        {
+            Node* temp = topNode;
+            topNode = topNode->next;
+            delete(temp);
+        }
+
+        topNode = nullptr;
+        count = 0;
     }
 };
 
