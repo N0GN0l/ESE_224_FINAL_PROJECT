@@ -39,6 +39,7 @@ bool Drone::setModel(const std::string& m)
         model = m;
         return true;
     }
+    std::cerr<<"Invalid model provided"<<std::endl;
     return false;
 }
 
