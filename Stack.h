@@ -65,6 +65,7 @@ public:
         
         delete(temp);
 
+        count--;
         return true;
     }
 
