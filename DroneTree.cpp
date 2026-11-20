@@ -7,7 +7,6 @@
 
 #include "DroneTree.h"
 #include "DeliveryUnit.h"
-#include <cstddef>
 #include <iostream>
 
 DroneTree::DroneTree() : root(nullptr), count(0) {}
@@ -113,15 +112,14 @@ DeliveryUnit* DroneTree::searchHelper(TreeNode* node, int id, int& comparisons) 
 
 bool DroneTree::remove(int id)
 {
-    if (removeHelper(root, id)) { count--; return true; }
+    if (removeHelper(root, id) != nullptr) { count--; return true; }
     return false;
 }
 
-bool DroneTree::removeHelper(TreeNode*& node, int id)
+DroneTree::TreeNode* DroneTree::removeHelper(TreeNode*& node, int id)
 {
     // TODO: three cases; two children -> in-order successor
     
-    return false;
 }
 
 void DroneTree::inOrder() const { inOrderHelper(root); std::cout << std::endl; }
@@ -167,18 +165,17 @@ int DroneTree::height() const { return heightHelper(root); }
 
 int DroneTree::heightHelper(TreeNode* node) const
 {
-    if(node == nullptr)
+    if (node == nullptr)
     {
         return 0;
     }
-    else if(node->left == nullptr && node->right == nullptr)
-    {
-        return 1;
-    }
-    else {
-        
-    }
-    // TODO: empty tree 0, one node 1
+
+    int leftHeight = heightHelper(node->left);
+    int rightHeight = heightHelper(node->right);
+
+    return 1 + (leftHeight > rightHeight ? leftHeight : rightHeight);
 }
 
 int DroneTree::size() const { return count; }
+
+

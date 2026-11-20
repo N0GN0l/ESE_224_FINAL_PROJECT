@@ -25,7 +25,7 @@ private:
     // Recursive helpers
     bool insertHelper(TreeNode*& node, DeliveryUnit* u);
     DeliveryUnit* searchHelper(TreeNode* node, int id, int& comparisons) const;
-    bool removeHelper(TreeNode*& node, int id);
+    TreeNode* removeHelper(TreeNode*& node, int id);
     void inOrderHelper(TreeNode* node) const;
     void preOrderHelper(TreeNode* node) const;
     void postOrderHelper(TreeNode* node) const;
