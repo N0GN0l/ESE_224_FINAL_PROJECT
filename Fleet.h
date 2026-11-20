@@ -20,7 +20,7 @@ private:
     {
         DeliveryUnit* unit;
         UnitNode* next;
-        UnitNode(DeliveryUnit* unit, UnitNode* next);
+        UnitNode(DeliveryUnit* unit, UnitNode* next) : unit(unit), next(next) {};
     };
     UnitNode* head;
     int count;
