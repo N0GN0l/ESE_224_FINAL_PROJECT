@@ -17,6 +17,7 @@ private:
         DeliveryUnit* unit;
         TreeNode* left;
         TreeNode* right;
+        TreeNode(DeliveryUnit* unit, TreeNode* left, TreeNode* right) : unit(unit), left(left), right(right) {};
     };
     TreeNode* root;
     int count;

@@ -47,7 +47,36 @@ bool DroneTree::insert(DeliveryUnit* u)
 bool DroneTree::insertHelper(TreeNode*& node, DeliveryUnit* u)
 {
     // TODO: smaller IDs left, larger right; false on a duplicate
-    return false;
+    int comparisons;
+    if(search(u->getID(), comparisons) != nullptr)
+    {
+        std::cerr<<"Cannot insert duplicate delivery units"<<std::endl;
+        return false;
+    }
+
+    if(node->left == nullptr)
+    {
+        node->left = new TreeNode(u,nullptr,nullptr);
+    }
+    else //This runs when the left node isn't a nullptr
+    {
+        if(node->right == nullptr)
+        {
+            node->right = new TreeNode(u, nullptr, nullptr);
+        }
+        else //This runs when the right node isn't a nullptr
+        {
+            if(u->getID() < node->unit->getID())
+            {
+                insertHelper(node->left, u);
+            }
+            else //this block runs when the unit node id is larger than the node id 
+            {
+                insertHelper(node->right, u);
+            }
+        }
+    }
+    return true;
 }
 
 DeliveryUnit* DroneTree::search(int id, int& comparisons) const
