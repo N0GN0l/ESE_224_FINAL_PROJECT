@@ -6,6 +6,7 @@
 // The tree does NOT own the units: delete tree nodes only, never node->unit.
 
 #include "DroneTree.h"
+#include "DeliveryUnit.h"
 #include <cstddef>
 #include <iostream>
 
@@ -65,16 +66,10 @@ bool DroneTree::insertHelper(TreeNode*& node, DeliveryUnit* u)
         else {
             node->right = new TreeNode(u, nullptr, nullptr);
         }
-        return true;
-    }
-    if(node->right == nullptr)
-    {
-        node->right = new TreeNode(u, nullptr, nullptr);
     }
     else //This runs when the right node isn't a nullptr
     {
         //The following if statements don't check for when the ID is equal because that should be impossible
-
         if(u->getID() < node->unit->getID())
         {
             insertHelper(node->left, u);
@@ -84,6 +79,7 @@ bool DroneTree::insertHelper(TreeNode*& node, DeliveryUnit* u)
             insertHelper(node->right, u);
         }
     }
+    return true;
 }
 
 DeliveryUnit* DroneTree::search(int id, int& comparisons) const
@@ -107,14 +103,12 @@ DeliveryUnit* DroneTree::searchHelper(TreeNode* node, int id, int& comparisons) 
     }
 
 
-    if(searchHelper(node->left,id,comparisons) ==  nullptr)
+    if(id > node->unit->getID())
     {
-        if(searchHelper(node->right, id ,comparisons) == nullptr)
-        {
-            return nullptr;
-        }
+        return searchHelper(node->right, id, comparisons);
     }
 
+    return searchHelper(node->left, id, comparisons);
 }
 
 bool DroneTree::remove(int id)
@@ -126,7 +120,7 @@ bool DroneTree::remove(int id)
 bool DroneTree::removeHelper(TreeNode*& node, int id)
 {
     // TODO: three cases; two children -> in-order successor
-
+    
     return false;
 }
 
@@ -136,29 +130,37 @@ void DroneTree::postOrder() const { postOrderHelper(root); std::cout << std::end
 
 void DroneTree::inOrderHelper(TreeNode* node) const 
 {
-    if(node->left == nullptr)
+    if(node== nullptr)
     {
-        if(node->right->right != nullptr)
-        {
-
-        }
+        return;
     }
-    if(node->left->left != nullptr)
-    {
-        inOrderHelper(node->left);
-    }
-    else if(node->left->left == nullptr)
-    {
-        std::cout<<node->left->unit->getID()<<" ";
-    }
+    
+    inOrderHelper(node->left);
+    inOrderHelper(node->right);
+    std::cout<< node->unit->getID()<<" ";
 }
+
 void DroneTree::preOrderHelper(TreeNode* node) const 
 {
-
+    if(node == nullptr)
+    {
+        return;
+    }
+    std::cout<<node->unit->getID()<<" ";
+    preOrderHelper(node->left);
+    preOrderHelper(node->right);
 }
+
 void DroneTree::postOrderHelper(TreeNode* node) const 
 {
+    if(node == nullptr)
+    {
+        return;
+    }
 
+    postOrderHelper(node->left);
+    postOrderHelper(node->right);
+    std::cout<<node->unit->getID()<<" ";
 }
 
 int DroneTree::height() const { return heightHelper(root); }
