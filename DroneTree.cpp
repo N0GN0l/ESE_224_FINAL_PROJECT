@@ -6,6 +6,7 @@
 // The tree does NOT own the units: delete tree nodes only, never node->unit.
 
 #include "DroneTree.h"
+#include <cstddef>
 #include <iostream>
 
 DroneTree::DroneTree() : root(nullptr), count(0) {}
@@ -55,31 +56,34 @@ bool DroneTree::insertHelper(TreeNode*& node, DeliveryUnit* u)
     }
 
 
-    if(node->left == nullptr)
+    if(node->left == nullptr && node->right == nullptr)
     {
-        node->left = new TreeNode(u,nullptr,nullptr);
-    }
-    else //This runs when the left node isn't a nullptr
-    {
-        if(node->right == nullptr)
+        if(u->getID() < node->unit->getID())
         {
+            node->left = new TreeNode(u,nullptr,nullptr);
+        }
+        else {
             node->right = new TreeNode(u, nullptr, nullptr);
         }
-        else //This runs when the right node isn't a nullptr
-        {
-            //The following if statements don't check for when the ID is equal because that should be impossible
+        return true;
+    }
+    if(node->right == nullptr)
+    {
+        node->right = new TreeNode(u, nullptr, nullptr);
+    }
+    else //This runs when the right node isn't a nullptr
+    {
+        //The following if statements don't check for when the ID is equal because that should be impossible
 
-            if(u->getID() < node->unit->getID())
-            {
-                insertHelper(node->left, u);
-            }
-            else //this block runs when the unit node id is larger than the node id 
-            {
-                insertHelper(node->right, u);
-            }
+        if(u->getID() < node->unit->getID())
+        {
+            insertHelper(node->left, u);
+        }
+        else //this block runs when the unit node id is larger than the node id 
+        {
+            insertHelper(node->right, u);
         }
     }
-    return true;
 }
 
 DeliveryUnit* DroneTree::search(int id, int& comparisons) const
@@ -92,20 +96,25 @@ DeliveryUnit* DroneTree::searchHelper(TreeNode* node, int id, int& comparisons) 
 {
     // TODO: one comparison per node examined
     comparisons++;
+    if(node == nullptr)
+    {
+        return nullptr;
+    }
+    
     if(node->unit->getID() == id)
     {
         return node->unit;
     }
-    //If the node unit ID doesnt equal the id you're searching for
-    else if(id < node->unit->getID()) 
-    { 
-        searchHelper(node->left, id, comparisons);
-    }
-    else if(id > node->unit->getID())
+
+
+    if(searchHelper(node->left,id,comparisons) ==  nullptr)
     {
-        searchHelper(node->right, id, comparisons);
+        if(searchHelper(node->right, id ,comparisons) == nullptr)
+        {
+            return nullptr;
+        }
     }
-    return nullptr;
+
 }
 
 bool DroneTree::remove(int id)
@@ -117,6 +126,7 @@ bool DroneTree::remove(int id)
 bool DroneTree::removeHelper(TreeNode*& node, int id)
 {
     // TODO: three cases; two children -> in-order successor
+
     return false;
 }
 
@@ -124,16 +134,49 @@ void DroneTree::inOrder() const { inOrderHelper(root); std::cout << std::endl; }
 void DroneTree::preOrder() const { preOrderHelper(root); std::cout << std::endl; }
 void DroneTree::postOrder() const { postOrderHelper(root); std::cout << std::endl; }
 
-void DroneTree::inOrderHelper(TreeNode* node) const { /* TODO */ }
-void DroneTree::preOrderHelper(TreeNode* node) const { /* TODO */ }
-void DroneTree::postOrderHelper(TreeNode* node) const { /* TODO */ }
+void DroneTree::inOrderHelper(TreeNode* node) const 
+{
+    if(node->left == nullptr)
+    {
+        if(node->right->right != nullptr)
+        {
+
+        }
+    }
+    if(node->left->left != nullptr)
+    {
+        inOrderHelper(node->left);
+    }
+    else if(node->left->left == nullptr)
+    {
+        std::cout<<node->left->unit->getID()<<" ";
+    }
+}
+void DroneTree::preOrderHelper(TreeNode* node) const 
+{
+
+}
+void DroneTree::postOrderHelper(TreeNode* node) const 
+{
+
+}
 
 int DroneTree::height() const { return heightHelper(root); }
 
 int DroneTree::heightHelper(TreeNode* node) const
 {
+    if(node == nullptr)
+    {
+        return 0;
+    }
+    else if(node->left == nullptr && node->right == nullptr)
+    {
+        return 1;
+    }
+    else {
+        
+    }
     // TODO: empty tree 0, one node 1
-    return 0;
 }
 
 int DroneTree::size() const { return count; }
