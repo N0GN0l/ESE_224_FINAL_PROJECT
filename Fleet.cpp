@@ -10,6 +10,14 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <cmath>
+
+// Formats a double with exactly one decimal place, e.g. 30.14 -> "30.1", 6 -> "6.0"
+static std::string oneDecimal(double value)
+{
+    std::string s = std::to_string(std::round(value * 10.0) / 10.0);  // e.g. "30.100000"
+    return s.substr(0, s.find('.') + 2);                               // keep one digit after '.'
+}
 
 Fleet::Fleet() : head(nullptr), count(0) {}
 
@@ -235,23 +243,62 @@ int Fleet::loadOrders(const std::string& orderFile, const std::string& logFile)
 
     if (!fin){
         std::cerr << "ERROR: Could not open file" << std::endl;
-        return; 
+        return 0;
     }
 
     int id, x, y;
     double weight;
+    int loaded = 0;
     // Read the file line by line until EOF (End of File)
     while (fin >> id >> x >> y >> weight) {
         pending.enqueue(Order{id, x, y, weight});
+        loaded++;
     }
     std::ofstream log(logFile);   // creates or wipes the file
 
-    // TODO: enqueue every order into 'pending' in file order; start a new, empty log file
-    return 0;
+    return loaded;
 }
 
 void Fleet::processPending(const std::string& logFile)
 {
+    int processed = 0, assigned = 0, failed = 0;
+    double totalDistance = 0.0;     // sum of exact distances; rounded only when printed
+
+    while (!pending.isEmpty()){
+        Order temp;
+        pending.dequeue(temp);
+        processed++;
+
+        DeliveryUnit* delTemp = findNearestAvailable(temp.x, temp.y, temp.weight);
+        std::string line;
+
+        if (delTemp != nullptr){
+            double oldBattery = delTemp->getBattery();
+            double dist = delTemp->distanceTo(temp.x, temp.y);
+
+            history.push(DispatchRecord{temp, delTemp->getID(), oldBattery, delTemp->getPosition(0), delTemp->getPosition(1), delTemp->getStatus()});
+            delTemp->completeDelivery(temp.x, temp.y, temp.weight);
+
+            totalDistance += dist;
+            assigned++;
+
+            line = "Order " + std::to_string(temp.orderID) + ": " + delTemp->type() + " "
+                 + std::to_string(delTemp->getID()) + " (" + delTemp->getName() + ") distance "
+                 + oneDecimal(dist) + " battery " + oneDecimal(oldBattery) + " -> "
+                 + oneDecimal(delTemp->getBattery());
+        }
+        else{
+            retry.enqueue(temp);
+            failed++;
+
+            line = "Order " + std::to_string(temp.orderID) + ": no unit available, moved to retry queue";
+        }
+        appendLog(logFile, line);
+    }
+
+    appendLog(logFile, "Processed " + std::to_string(processed) + " orders: "
+                       + std::to_string(assigned) + " assigned, " + std::to_string(failed)
+                       + " moved to retry queue. Distance flown: " + oneDecimal(totalDistance));
     // TODO: dequeue until empty; dispatch (push a DispatchRecord first) or move to 'retry'; log each line and a summary
 }
 

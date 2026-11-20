@@ -40,11 +40,11 @@ public:
     {
         if(isEmpty())
         {
-            frontNode = new Node(item, nullptr);
+            frontNode = new Node{item, nullptr};
             backNode = frontNode;
         }
         else {
-            backNode->next = new Node(item, nullptr);
+            backNode->next = new Node{item, nullptr};
             backNode = backNode->next;
         }
 
