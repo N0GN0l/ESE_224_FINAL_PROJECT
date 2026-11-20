@@ -116,10 +116,47 @@ bool DroneTree::remove(int id)
     return false;
 }
 
+DroneTree::TreeNode* DroneTree::getSuccessor(TreeNode* curr) {
+    curr = curr->right;
+    while (curr != nullptr && curr->left != nullptr)
+        curr = curr->left;
+    return curr;
+}
+
 DroneTree::TreeNode* DroneTree::removeHelper(TreeNode*& node, int id)
 {
     // TODO: three cases; two children -> in-order successor
     
+    if(id > node->unit->getID())
+    {
+        node->right = removeHelper(node->right, id);
+    }
+
+    else if(id < node->unit->getID())
+    {
+        node->left = removeHelper(node->left, id);
+    }
+
+    else//if(id == node->unit->getID())
+    {
+        if(node->left == nullptr)
+        {
+            TreeNode* temp = node->right;
+            delete(node);
+            return temp;
+        }
+        if(node->right == nullptr)
+        {
+            TreeNode* temp = node->left;
+            delete(node);
+            return temp;
+        }
+
+        TreeNode* succ = getSuccessor(node);
+        node->unit->setID(succ->unit->getID());
+        node->right = removeHelper(node->right, succ->unit->getID());
+    }
+    return node;
 }
 
 void DroneTree::inOrder() const { inOrderHelper(root); std::cout << std::endl; }

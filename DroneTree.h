@@ -31,6 +31,7 @@ private:
     void postOrderHelper(TreeNode* node) const;
     int heightHelper(TreeNode* node) const;
     void destroy(TreeNode* node);
+    TreeNode* getSuccessor(TreeNode* curr);
 
 public:
     DroneTree();
