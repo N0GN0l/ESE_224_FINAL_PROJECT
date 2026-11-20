@@ -185,7 +185,26 @@ void Fleet::countByStatus() const
     std::cout << "History records: " << history.size() << std::endl;
 }
 
-void Fleet::writeFleetToFile(const std::string& filename) const { /* TODO */ }
+void Fleet::writeFleetToFile(const std::string& filename) const {
+    std::ofstream outFile(filename);
+    if (!outFile){
+        std::cerr << "ERROR: Could not open file" << std::endl;
+        return; 
+    }
+    UnitNode* curr = head;
+    char type;
+    while (curr != nullptr){
+        if (curr->unit->getModel() == "Hauler") type = 'H';
+        else type = 'D';
+        std::cout << std::setprecision(1);
+        outFile << type << " " <<  curr->unit->getName() << " " << curr->unit->getID() <<
+                " " << curr->unit->getModel() << " " << curr->unit->getBattery() << " " <<
+                curr->unit->getMaxPayload() << " " << curr->unit->getPosition(0) << " " <<
+                curr->unit->getPosition(1) << " " << curr->unit->getStatus() << " " << 
+                curr->unit->getDeliveriesCompleted() << std::endl;
+        curr = curr->next;
+    }
+}
 
 // ---------- Dispatch center ----------
 DeliveryUnit* Fleet::findNearestAvailable(int x, int y, double weight) const
