@@ -55,8 +55,6 @@ bool DroneTree::insertHelper(TreeNode*& node, DeliveryUnit* u)
     }
 
 
-
-    
     if(node->left == nullptr)
     {
         node->left = new TreeNode(u,nullptr,nullptr);
@@ -70,7 +68,7 @@ bool DroneTree::insertHelper(TreeNode*& node, DeliveryUnit* u)
         else //This runs when the right node isn't a nullptr
         {
             //The following if statements don't check for when the ID is equal because that should be impossible
-            
+
             if(u->getID() < node->unit->getID())
             {
                 insertHelper(node->left, u);
@@ -93,6 +91,20 @@ DeliveryUnit* DroneTree::search(int id, int& comparisons) const
 DeliveryUnit* DroneTree::searchHelper(TreeNode* node, int id, int& comparisons) const
 {
     // TODO: one comparison per node examined
+    comparisons++;
+    if(node->unit->getID() == id)
+    {
+        return node->unit;
+    }
+    //If the node unit ID doesnt equal the id you're searching for
+    else if(id < node->unit->getID()) 
+    { 
+        searchHelper(node->left, id, comparisons);
+    }
+    else if(id > node->unit->getID())
+    {
+        searchHelper(node->right, id, comparisons);
+    }
     return nullptr;
 }
 
