@@ -231,6 +231,21 @@ void Fleet::appendLog(const std::string& logFile, const std::string& line) const
 
 int Fleet::loadOrders(const std::string& orderFile, const std::string& logFile)
 {
+    std::ifstream fin(orderFile);
+
+    if (!fin){
+        std::cerr << "ERROR: Could not open file" << std::endl;
+        return; 
+    }
+
+    int id, x, y;
+    double weight;
+    // Read the file line by line until EOF (End of File)
+    while (fin >> id >> x >> y >> weight) {
+        pending.enqueue(Order{id, x, y, weight});
+    }
+    std::ofstream log(logFile);   // creates or wipes the file
+
     // TODO: enqueue every order into 'pending' in file order; start a new, empty log file
     return 0;
 }
