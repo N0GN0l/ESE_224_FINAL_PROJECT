@@ -113,7 +113,8 @@ DeliveryUnit* Fleet::searchTree(int id) const
 {
     int comp;
     DeliveryUnit* unit = index.search(id, comp);
-    std::cout << "Comparison: " << comp << std::endl;
+    if (unit != nullptr) std::cout << "BST search: found ID" << id << " after " << comp << "comparisons." << std::endl;
+    else std::cout << "BST search: ID" << id << " not found after " << comp << "comparisons." << std::endl;
     return unit;
 }
 
@@ -121,7 +122,14 @@ int Fleet::getSize() const {
     return count; 
 }
 
-void Fleet::displayAll() const { /* TODO */ }
+void Fleet::displayAll() const {
+    UnitNode* curr = head;
+    while (curr != nullptr){
+        curr->unit->display();
+        std::cout << std::endl;
+        curr = curr->next;
+    }
+}
 
 void Fleet::displayTree() const
 {
