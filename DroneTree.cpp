@@ -14,6 +14,27 @@ DroneTree::~DroneTree() { destroy(root); }
 
 void DroneTree::destroy(TreeNode* node)
 {
+    if(node->left->left != nullptr)
+    {
+        destroy(node->left);
+    }
+    else if(node->left->left == nullptr)
+    {
+        if(node->left != nullptr)
+        {
+            delete(node->left);
+        }
+
+        if(node->right->right == nullptr)
+        {
+            delete(node->right);
+            delete(root);
+        }
+        else if(node->right->right != nullptr)
+        {
+            destroy(node->right);    
+        }
+    }
     // TODO: delete every node (post-order)
 }
 
