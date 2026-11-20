@@ -71,14 +71,42 @@ bool Fleet::removeUnit(int id)
 
 DeliveryUnit* Fleet::findQuiet(int id) const
 {
-    // TODO: list   nd undo)
+    if (head == nullptr){
+        return nullptr;
+    }
+    UnitNode* curr = head;
+    while (curr->next != nullptr && curr->next->unit->getID() <= id){
+        curr = curr->next;
+    }
+    if (curr->unit->getID() == id){
+        return curr->unit;
+    }
     return nullptr;
 }
 
 DeliveryUnit* Fleet::findByID(int id) const
 {
-    // TODO: one comparison per node examined; stop at the first larger ID; print the count
+    int comp = 0;
+    if (head == nullptr){
+        std::cerr << "ERROR: List is empty" << std::endl;
+        return nullptr;
+    }
+    UnitNode* curr = head;
+    while (curr->next != nullptr && curr->next->unit->getID() <= id){
+        comp++;
+        curr = curr->next;
+    }
+    if (curr->unit->getID() == id){
+        comp++;
+        std::cout << "Comparison count: " << comp << std::endl;
+        return curr->unit;
+    }
+    comp++;   // the final check 
+    std::cout << "Comparison count: " << comp << std::endl;
+    std::cerr << "ERROR: ID not found" << std::endl;
     return nullptr;
+
+    // TODO: one comparison per node examined; stop at the first larger ID; print the count
 }
 
 DeliveryUnit* Fleet::searchTree(int id) const
