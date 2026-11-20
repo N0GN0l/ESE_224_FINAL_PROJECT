@@ -34,7 +34,7 @@ bool Fleet::addUnit(DeliveryUnit* u)
     // {
     //     if(temp->unit->getID() == curr->unit->getID())
     //     {
-    //         std::cerr<<"Cannot add delivery units with duplicate ID's"<<std::endl;
+    //         std::cerr<<"Cannot add delivery units with duplicate IDs"<<std::endl;
     //         delete temp;
     //         delete u;
     //         return false;
@@ -60,7 +60,7 @@ bool Fleet::removeUnit(int id)
         prev = curr;
         if(curr->next == nullptr)
         {
-            std::cerr<<"Could not find a delivery unit with the given id"<<std::endl;
+            std::cerr<<"Could not find a delivery unit with the given ID"<<std::endl;
             return false;
         }
         curr = curr->next;
