@@ -133,10 +133,57 @@ void Fleet::displayAll() const {
 
 void Fleet::displayTree() const
 {
+    std::cout << "in-order: " << std::endl;
+    index.inOrder();
+    std::cout << std::endl;
+
+    std::cout << "post-order: " << std::endl;
+    index.inOrder();
+    std::cout << std::endl;
+
+    std::cout << "pre-order: " << std::endl;
+    index.inOrder();
+    std::cout << std::endl;
+
+    std::cout << "Height: " << index.height() << std::endl;
     // TODO: in-order, pre-order, post-order, and height
 }
 
-void Fleet::countByStatus() const { /* TODO */ }
+void Fleet::countByStatus() const
+{
+    int drones = 0, heavies = 0;
+    int idle = 0, charging = 0, maintenance = 0;
+    double batteryTotal = 0.0;
+
+    for (UnitNode* curr = head; curr != nullptr; curr = curr->next)
+    {
+        DeliveryUnit* u = curr->unit;
+
+        if (u->type() == "Drone") drones++;
+        else if (u->type() == "Heavy") heavies++;
+
+        std::string s = u->getStatus();
+        if (s == "IDLE") idle++;
+        else if (s == "CHARGING") charging++;
+        else if (s == "MAINTENANCE") maintenance++;
+
+        batteryTotal += u->getBattery();
+    }
+
+    std::cout << "Units by type:   Drone " << drones << ", Heavy " << heavies << std::endl;
+    std::cout << "Units by status: IDLE " << idle << ", CHARGING " << charging
+              << ", MAINTENANCE " << maintenance << std::endl;
+
+    std::cout << "Average battery: ";
+    if (count > 0)
+        std::cout << std::fixed << std::setprecision(1) << batteryTotal / count << "%" << std::endl;
+    else
+        std::cout << "N/A (no units)" << std::endl;
+
+    std::cout << "Pending orders:  " << pending.size() << std::endl;
+    std::cout << "Retry orders:    " << retry.size() << std::endl;
+    std::cout << "History records: " << history.size() << std::endl;
+}
 
 void Fleet::writeFleetToFile(const std::string& filename) const { /* TODO */ }
 
