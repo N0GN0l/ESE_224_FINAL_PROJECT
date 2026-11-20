@@ -26,6 +26,35 @@ bool login()
 //       create the unit with new, add it to the fleet, and print how many were loaded.
 void loadFleet(Fleet& fleet, const std::string& filename)
 {
+    char unit_type;
+    std::string name;
+    std::string model;
+    int ID, x, y;
+    double battery, maxPayload;
+    std::string status;
+    int count = 0;
+    std::ifstream fin(filename);
+
+    while(fin>>unit_type>>name>>ID>>model>>battery>>maxPayload>>x>>y>>status)
+    {
+        DeliveryUnit* temp = nullptr;
+
+        if (unit_type == 'D')
+        {
+            temp = new Drone(name,ID,model,battery,maxPayload,x,y,status);
+        } 
+        else if (unit_type == 'H')
+        {
+            temp = new HeavyDrone(name,ID,model,battery,maxPayload,x,y,status);
+        }
+        
+        if (temp != nullptr)
+        {
+            if(fleet.addUnit(temp)) count++;
+            else delete temp;
+        }
+    }
+    std::cout<<count<<" drones loaded"<<std::endl;
 }
 
 void showMenu()
