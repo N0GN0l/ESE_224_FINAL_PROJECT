@@ -21,62 +21,57 @@ Fleet::~Fleet()
 // ---------- Linked list ----------
 bool Fleet::addUnit(DeliveryUnit* u)
 {
-    UnitNode* temp = new UnitNode(u,nullptr);
-    if(head == nullptr)
-    {
+    if (findQuiet(u->getID()) != nullptr) {
+        std::cerr << "Cannot add delivery units with duplicate IDs" << std::endl;
+        delete u;
+        return false;
+    }
+
+    UnitNode* temp = new UnitNode(u, nullptr);
+
+    if (head == nullptr || u->getID() < head->unit->getID()) {
+        temp->next = head;          // new head (covers empty list too)
         head = temp;
-        return true;
+    } else {
+        UnitNode* prev = head;
+        while (prev->next != nullptr && prev->next->unit->getID() < u->getID())
+            prev = prev->next;
+        temp->next = prev->next;
+        prev->next = temp;
     }
 
-    UnitNode* curr = head;
-    UnitNode* prev = curr;
-    while(temp->unit->getID() > curr->unit->getID())
-    {
-        if(temp->unit->getID() == curr->unit->getID())
-        {
-            std::cerr<<"Cannot add delivery units with duplicate ID's"<<std::endl;
-            delete temp;
-            delete u;
-            return false;
-        }
-        prev = curr;
-        curr = curr->next;
-    }
-
-    prev->next = temp;
-    temp->next = curr;
+    index.insert(u);
+    count++;
     return true;
-
-    // TODO: sorted insert by ID and insert into 'index'; on a duplicate ID print a message, delete u, return false
 }
 
 bool Fleet::removeUnit(int id)
 {
+    UnitNode* prev = nullptr;
     UnitNode* curr = head;
-    UnitNode* prev;
-    while(curr->unit->getID() != id)
-    {
+    while (curr != nullptr && curr->unit->getID() != id) {
         prev = curr;
-        if(curr->next == nullptr)
-        {
-            std::cerr<<"Could not find a delivery unit with the given id"<<std::endl;
-            return false;
-        }
         curr = curr->next;
-        
     }
 
-    delete curr->unit;
+    if (curr == nullptr) {
+        std::cerr << "Could not find a delivery unit with the given id" << std::endl;
+        return false;
+    }
 
-    prev->next = curr->next;
+    if (prev == nullptr) head = curr->next;   // removing the head
+    else prev->next = curr->next;
+
+    index.remove(id);
+    delete curr->unit;
     delete curr;
-    //make this work with the binary tree!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO: unlink, remove from 'index', delete the unit and the node
+    count--;
+    return true;
 }
 
 DeliveryUnit* Fleet::findQuiet(int id) const
 {
-    // TODO: list lookup without printing (used by addUnit and undo)
+    // TODO: list   nd undo)
     return nullptr;
 }
 
@@ -88,11 +83,15 @@ DeliveryUnit* Fleet::findByID(int id) const
 
 DeliveryUnit* Fleet::searchTree(int id) const
 {
-    // TODO: index.search(...) and print the count
-    return nullptr;
+    int comp;
+    DeliveryUnit* unit = index.search(id, comp);
+    std::cout << "Comparison: " << comp << std::endl;
+    return unit;
 }
 
-int Fleet::getSize() const { return count; }
+int Fleet::getSize() const { 
+    return count; 
+}
 
 void Fleet::displayAll() const { /* TODO */ }
 
