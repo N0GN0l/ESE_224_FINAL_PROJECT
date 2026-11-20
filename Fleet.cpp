@@ -304,19 +304,63 @@ void Fleet::processPending(const std::string& logFile)
 
 bool Fleet::undoLastDispatch(const std::string& logFile)
 {
-    // TODO: pop the last record, undoDelivery on that unit, move the order to 'retry'
-    return false;
+    if (history.isEmpty()){
+        std::cout << "Nothing to undo." << std::endl;
+        return false;
+    }
+
+    DispatchRecord temp;
+    history.pop(temp);
+    retry.enqueue(temp.order);
+
+    DeliveryUnit* unit = findQuiet(temp.unitID);
+    if (unit == nullptr){
+        appendLog(logFile, "Undo order " + std::to_string(temp.order.orderID) + ": unit "
+                  + std::to_string(temp.unitID) + " was removed, order moved to retry queue");
+        return true;
+    }
+
+    unit->undoDelivery(temp.oldBattery, temp.oldX, temp.oldY, temp.oldStatus);
+
+    // Undo order 5020: Drone 342 (Meteor) restored to battery 82.6 at (26, 6) IDLE, order moved to retry queue
+    appendLog(logFile, "Undo order " + std::to_string(temp.order.orderID) + ": " + unit->type() + " "
+              + std::to_string(unit->getID()) + " (" + unit->getName() + ") restored to battery "
+              + oneDecimal(unit->getBattery()) + " at (" + std::to_string(unit->getPosition(0)) + ", "
+              + std::to_string(unit->getPosition(1)) + ") " + unit->getStatus()
+              + ", order moved to retry queue");
+    return true;
 }
+
 
 int Fleet::rechargeAll(const std::string& logFile)
 {
-    // TODO: every CHARGING unit -> battery 100, IDLE
-    return 0;
+    int recharged = 0;
+    for (UnitNode* curr = head; curr != nullptr; curr = curr->next){
+        if (curr->unit->getStatus() == "CHARGING"){     // MAINTENANCE units are left alone
+            curr->unit->setBattery(100.0);
+            curr->unit->setStatus("IDLE");
+            recharged++;
+        }
+    }
+
+    // Recharged 4 units to 100%.
+    appendLog(logFile, "Recharged " + std::to_string(recharged) + " units to 100%.");
+    return recharged;
 }
 
 void Fleet::retryFailed(const std::string& logFile)
 {
-    // TODO: move every order from 'retry' to 'pending' (keep the order), then processPending
+    // Retrying 5 orders.
+    appendLog(logFile, "Retrying " + std::to_string(retry.size()) + " orders.");
+
+    // dequeue from the front, enqueue at the back: keeps the original order
+    Order temp;
+    while (!retry.isEmpty()){
+        retry.dequeue(temp);
+        pending.enqueue(temp);
+    }
+
+    processPending(logFile);
 }
 
 int Fleet::pendingCount() const { return pending.size(); }
