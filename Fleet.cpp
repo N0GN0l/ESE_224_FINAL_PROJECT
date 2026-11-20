@@ -113,8 +113,8 @@ DeliveryUnit* Fleet::searchTree(int id) const
 {
     int comp;
     DeliveryUnit* unit = index.search(id, comp);
-    if (unit != nullptr) std::cout << "BST search: found ID" << id << " after " << comp << "comparisons." << std::endl;
-    else std::cout << "BST search: ID" << id << " not found after " << comp << "comparisons." << std::endl;
+    if (unit != nullptr) std::cout << "BST search: found ID " << id << " after " << comp << " comparisons." << std::endl;
+    else std::cout << "BST search: ID " << id << " not found after " << comp << " comparisons." << std::endl;
     return unit;
 }
 
@@ -138,11 +138,11 @@ void Fleet::displayTree() const
     std::cout << std::endl;
 
     std::cout << "post-order: " << std::endl;
-    index.inOrder();
+    index.postOrder();
     std::cout << std::endl;
 
     std::cout << "pre-order: " << std::endl;
-    index.inOrder();
+    index.preOrder();
     std::cout << std::endl;
 
     std::cout << "Height: " << index.height() << std::endl;
@@ -196,7 +196,7 @@ void Fleet::writeFleetToFile(const std::string& filename) const {
     while (curr != nullptr){
         if (curr->unit->getModel() == "Hauler") type = 'H';
         else type = 'D';
-        std::cout << std::setprecision(1);
+        outFile << std::fixed << std::setprecision(1);
         outFile << type << " " <<  curr->unit->getName() << " " << curr->unit->getID() <<
                 " " << curr->unit->getModel() << " " << curr->unit->getBattery() << " " <<
                 curr->unit->getMaxPayload() << " " << curr->unit->getPosition(0) << " " <<
@@ -209,8 +209,16 @@ void Fleet::writeFleetToFile(const std::string& filename) const {
 // ---------- Dispatch center ----------
 DeliveryUnit* Fleet::findNearestAvailable(int x, int y, double weight) const
 {
-    // TODO: closest unit that canDeliver; a tie goes to the smaller ID
-    return nullptr;
+    UnitNode* curr = head;
+    DeliveryUnit* curr_shortest = nullptr;
+    while(curr != nullptr){
+        if (curr->unit->canDeliver(x, y, weight)){
+            if (curr_shortest == nullptr) curr_shortest = curr->unit;
+            if (curr->unit->distanceTo(x,y) < curr_shortest->distanceTo(x,y)) curr_shortest = curr->unit;
+        }
+        curr = curr->next;
+    }
+    return curr_shortest;
 }
 
 void Fleet::appendLog(const std::string& logFile, const std::string& line) const
