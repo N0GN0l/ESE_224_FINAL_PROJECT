@@ -26,7 +26,7 @@ bool login()
 //       create the unit with new, add it to the fleet, and print how many were loaded.
 void loadFleet(Fleet& fleet, const std::string& filename)
 {
-    char unit_type;
+    char unit_type; // first word - classifying Drone or HeavyDrone
     std::string name;
     std::string model;
     int ID, x, y;
@@ -35,10 +35,11 @@ void loadFleet(Fleet& fleet, const std::string& filename)
     int count = 0;
     std::ifstream fin(filename);
 
-    while(fin>>unit_type>>name>>ID>>model>>battery>>maxPayload>>x>>y>>status)
+    while (fin>>unit_type>>name>>ID>>model>>battery>>maxPayload>>x>>y>>status) // until eof
     {
-        DeliveryUnit* temp = nullptr;
-
+        DeliveryUnit* temp = nullptr; // base-class ptr can point to objects of any DeliveryUnit derived class
+        
+        // runtime polymorphism - implementation to be executed determined during runtime
         if (unit_type == 'D')
         {
             temp = new Drone(name,ID,model,battery,maxPayload,x,y,status);
@@ -48,13 +49,14 @@ void loadFleet(Fleet& fleet, const std::string& filename)
             temp = new HeavyDrone(name,ID,model,battery,maxPayload,x,y,status);
         }
         
-        if (temp != nullptr)
+        if (temp != nullptr) // add unit if successfully created
         {
-            if(fleet.addUnit(temp)) count++;
-            else delete temp;
+            if (fleet.addUnit(temp)) count++;
+            else delete temp; // free if couldn't add
         }
     }
-    std::cout<<count<<" drones loaded"<<std::endl;
+
+    std::cout<<count<<" drones loaded"<<std::endl; // print how many loaded
 }
 
 void showMenu()
