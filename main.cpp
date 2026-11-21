@@ -95,17 +95,100 @@ int main()
         std::cin >> choice;
         // TODO: recover from a letter (cin.clear and cin.ignore) instead of crashing or looping forever
 
+        char unit_type;
+        std::string name;
+        std::string model;
+        int ID, x, y, idx;
+        double battery, maxPayload, weight;
+        std::string status;
+
         switch (choice)
         {
-        case 1:
-            fleet.displayAll();
-            break;
-        // TODO: cases 2 to 13 (table in Section 8)
-        case 0:
-            std::cout << "Goodbye!" << std::endl;
-            break;
-        default:
-            std::cout << "Invalid option." << std::endl;
+            case 1:
+                fleet.displayAll();
+                break;
+            case 2:
+                fleet.displayTree();
+                break;
+            case 3: // INCOMPLETE
+                std::cout << "input ID to search: ";
+                std::cin >> ID;
+                fleet.findByID(ID);
+                fleet.searchTree(ID);
+                // disp unit if found
+                break;
+            case 4: // add only if every validating mutator accepts & ID is not duplicate
+                DeliveryUnit* temp = nullptr; // point to either derived class
+                
+                std::cout << "input new unit's type (D or H): ";
+                std::cin >> unit_type;
+                std::cout << "input unit's name: ";
+                std::cin >> name;
+
+                if (unit_type == 'D')
+                {
+                    temp = new Drone();
+                }
+                else if (unit_type == 'H')
+                {
+                    temp = new HeavyDrone();
+                }
+
+                std::cout << "input specs (no commas) - ID, model, battery, maxPayload, x, y, status: ";
+                std::cin >> ID >> model >> battery >> maxPayload >> x >> y >> status;
+                
+                // temp-> = (*temp).
+                if (temp->setID(ID) && temp->setModel(model) && temp->setBattery(battery) && temp->setMaxPayload(maxPayload) &&temp->setPosition(0, x) && temp->setPosition(1, y) && temp->setStatus(status)) { // validate
+                    fleet.addUnit(temp);
+                } else {
+                    std::cout << "invalid specs / could not add unit" << std::endl;
+                    delete temp;
+                }
+                break;
+            case 5:
+                std::cout << "input ID to remove: ";
+                std::cin >> ID;
+                fleet.removeUnit(ID);
+                break;
+            case 6: // INCOMPLETE
+                std::cout << "input x, y, weight to find nearest available unit: ";
+                std::cin >> x >> y >> weight;
+                // idx = fleet.findNearestAvailable(x, y, weight);
+                // if(idx == -1)
+                // {
+                //     std::cout<<"No drone can be found to complete this delivery"<<std::endl;
+                // }
+                // else
+                // {
+                //     fleet.displayDrone(idx);
+                // }
+                break;
+            case 7:
+                fleet.loadOrders("orders.txt", "delivery_log.txt");
+                break;
+            case 8:
+                fleet.processPending("delivery_log.txt");
+                break;
+            case 9:
+                fleet.undoLastDispatch("delivery_log.txt");
+                break;
+            case 10:
+                fleet.rechargeAll("delivery_log.txt");
+                break;
+            case 11:
+                fleet.retryFailed("delivery_log.txt");
+                break;
+            case 12:
+                fleet.countByStatus();
+                break;
+            case 13:
+                fleet.writeFleetToFile("fleet_output.txt");
+                break;
+            case 0:
+                std::cout << "Goodbye!" << std::endl;
+                break;
+            default:
+                std::cout << "Invalid option." << std::endl;
         }
     }
     return 0;   // the Fleet destructor frees everything here
