@@ -37,15 +37,8 @@ public:
     void push(const T& item)
     {
         // TODO: add a new node on top
-        if(isEmpty())
-        {
-            topNode = new Node(item, nullptr);
-            return;
-        }
-
-        Node* temp = topNode;
-        topNode = new Node(item , temp);
-
+        // works for an empty stack too: the new node's next is just nullptr
+        topNode = new Node{item, topNode};
         count++;
     }
 
