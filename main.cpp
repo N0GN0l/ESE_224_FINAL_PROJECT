@@ -118,6 +118,7 @@ int main()
                 // disp unit if found
                 break;
             case 4: // add only if every validating mutator accepts & ID is not duplicate
+            { // local var declared in case
                 DeliveryUnit* temp = nullptr; // point to either derived class
                 
                 std::cout << "input new unit's type (D or H): ";
@@ -145,6 +146,7 @@ int main()
                     delete temp;
                 }
                 break;
+            }
             case 5:
                 std::cout << "input ID to remove: ";
                 std::cin >> ID;
