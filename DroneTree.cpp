@@ -11,32 +11,18 @@
 
 DroneTree::DroneTree() : root(nullptr), count(0) {}
 
-DroneTree::~DroneTree() { destroy(root); }
+DroneTree::~DroneTree() { destroy(root); root = nullptr; count = 0;}
 
 void DroneTree::destroy(TreeNode* node)
 {
-    if(node->left->left != nullptr)
+    if (node == nullptr)
     {
-        destroy(node->left);
+        return;
     }
-    else if(node->left->left == nullptr)
-    {
-        if(node->left != nullptr)
-        {
-            delete(node->left);
-        }
 
-        if(node->right->right == nullptr)
-        {
-            delete(node->right);
-            delete(root);
-        }
-        else if(node->right->right != nullptr)
-        {
-            destroy(node->right);    
-        }
-    }
-    // TODO: delete every node (post-order)
+    destroy(node->left);
+    destroy(node->right);
+    delete node;
 }
 
 bool DroneTree::insert(DeliveryUnit* u)
@@ -48,6 +34,12 @@ bool DroneTree::insert(DeliveryUnit* u)
 bool DroneTree::insertHelper(TreeNode*& node, DeliveryUnit* u)
 {
     // TODO: smaller IDs left, larger right; false on a duplicate
+    if (node == nullptr)
+    {
+        node = new TreeNode(u, nullptr, nullptr);
+        return true;
+    }
+    
     int comparisons;
     if(search(u->getID(), comparisons) != nullptr)
     {

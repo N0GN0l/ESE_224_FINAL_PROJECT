@@ -9,7 +9,6 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <sstream>
 #include <cmath>
 
 // Formats a double with exactly one decimal place, e.g. 30.14 -> "30.1", 6 -> "6.0"
