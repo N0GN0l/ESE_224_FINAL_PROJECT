@@ -94,7 +94,14 @@ int main()
         std::cout << "Choose an option: ";
         std::cin >> choice;
         // TODO: recover from a letter (cin.clear and cin.ignore) instead of crashing or looping forever
-
+        if (std::cin.fail()) // isn't int (ie, is letter)
+        {
+            std::cin.clear(); // reset error flags
+            std::cin.ignore(); // extract & discard bad input
+            std::cout << "input failed, try again\n";
+            continue; // jump back to beginning of loop
+        }
+ 
         char unit_type;
         std::string name;
         std::string model;
@@ -193,5 +200,6 @@ int main()
                 std::cout << "Invalid option." << std::endl;
         }
     }
+
     return 0;   // the Fleet destructor frees everything here
 }
