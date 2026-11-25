@@ -124,6 +124,8 @@ int main()
     loadFleet(fleet, "drones.txt"); // load fleet with input file
 
     int choice = -1;
+
+
     while (choice != 0)
     {
         showMenu();

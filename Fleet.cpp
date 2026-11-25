@@ -120,8 +120,12 @@ DeliveryUnit* Fleet::searchTree(int id) const
 {
     int comp;
     DeliveryUnit* unit = index.search(id, comp);
-    if (unit != nullptr) std::cout << "BST search: found ID " << id << " after " << comp << " comparisons." << std::endl;
-    else std::cout << "BST search: ID " << id << " not found after " << comp << " comparisons." << std::endl;
+    if (unit != nullptr){    
+        std::cout << "BST search: found ID " << id << " after " << comp << " comparisons." << std::endl;
+    }
+    else{
+         std::cout << "BST search: ID " << id << " not found after " << comp << " comparisons." << std::endl;
+    }
     return unit;
 }
 

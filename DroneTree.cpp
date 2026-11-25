@@ -82,11 +82,11 @@ DeliveryUnit* DroneTree::search(int id, int& comparisons) const
 DeliveryUnit* DroneTree::searchHelper(TreeNode* node, int id, int& comparisons) const
 {
     // TODO: one comparison per node examined
-    comparisons++;
     if(node == nullptr)
     {
         return nullptr;
     }
+    comparisons++;
     
     if(node->unit->getID() == id)
     {
@@ -163,8 +163,8 @@ void DroneTree::inOrderHelper(TreeNode* node) const
     }
     
     inOrderHelper(node->left);
-    inOrderHelper(node->right);
     std::cout<< node->unit->getID()<<" ";
+    inOrderHelper(node->right);
 }
 
 void DroneTree::preOrderHelper(TreeNode* node) const 
