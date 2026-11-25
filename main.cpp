@@ -19,7 +19,43 @@ const std::string LOG_FILE = "delivery_log.txt";
 // TODO: ask for a username and password until the pair is in users.txt; greet the user
 bool login()
 {
-    return true;
+    std::string name, pass;
+    std::string validName, validPass;
+
+    while (true) // indefinite until valid pair entered (break) or file cannot be opened (false)
+    {
+        std::cout << "input username: ";
+        std::cin >> name;
+        std::cout << "input password: ";
+        std::cin >> pass;
+
+        std::ifstream fin("users.txt");
+        if (!fin)
+        {
+            std::cout << "unable to open users.txt" << std::endl;
+            return false;
+        }
+
+        bool logged = false;
+        while (fin >> validName >> validPass)
+        {
+            if (name == validName && pass == validPass)
+            {
+                logged = true;
+                break;
+            }
+        }
+
+        fin.close();
+
+        if (logged)
+        {
+            std::cout << "Hello " << name << ", welcome to SkyDrop!" << std::endl;
+            return true;
+        }
+
+        std::cout << "please enter a valid username & password pair" << std::endl;
+    }
 }
 
 // TODO: read every line of drones.txt until end of file. The first word is D (Drone) or H (HeavyDrone):
@@ -81,11 +117,11 @@ void showMenu()
 
 int main()
 {
-    if (!login())
+    if (!login()) // if login fails terminate program
         return 0;
 
-    Fleet fleet;
-    loadFleet(fleet, "drones.txt");
+    Fleet fleet; // create fleet object
+    loadFleet(fleet, "drones.txt"); // load fleet with input file
 
     int choice = -1;
     while (choice != 0)
@@ -97,7 +133,7 @@ int main()
         if (std::cin.fail()) // isn't int (ie, is letter)
         {
             std::cin.clear(); // reset error flags
-            std::cin.ignore(); // extract & discard bad input
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // extract & discard bad input (more than just one)
             std::cout << "input failed, try again\n";
             continue; // jump back to beginning of loop
         }
@@ -105,7 +141,7 @@ int main()
         char unit_type;
         std::string name;
         std::string model;
-        int ID, x, y, idx;
+        int ID, x, y;
         double battery, maxPayload, weight;
         std::string status;
 
@@ -117,15 +153,24 @@ int main()
             case 2:
                 fleet.displayTree();
                 break;
-            case 3: // INCOMPLETE
+            case 3:
+            { // brackets for local var declared inside case
                 std::cout << "input ID to search: ";
                 std::cin >> ID;
-                fleet.findByID(ID);
+
+                // independently run
+                DeliveryUnit* temp = fleet.findByID(ID);
                 fleet.searchTree(ID);
-                // disp unit if found
+
+                if (temp != nullptr) { // use findByID to determine whether id was foudn
+                    temp->display(); // display unit info
+                } else {
+                    std::cout << "unit not found" << std::endl;
+                }
                 break;
+            }
             case 4: // add only if every validating mutator accepts & ID is not duplicate
-            { // local var declared in case
+            {
                 DeliveryUnit* temp = nullptr; // point to either derived class
                 
                 std::cout << "input new unit's type (D or H): ";
@@ -159,19 +204,18 @@ int main()
                 std::cin >> ID;
                 fleet.removeUnit(ID);
                 break;
-            case 6: // INCOMPLETE
+            case 6:
+            {
                 std::cout << "input x, y, weight to find nearest available unit: ";
                 std::cin >> x >> y >> weight;
-                // idx = fleet.findNearestAvailable(x, y, weight);
-                // if(idx == -1)
-                // {
-                //     std::cout<<"No drone can be found to complete this delivery"<<std::endl;
-                // }
-                // else
-                // {
-                //     fleet.displayDrone(idx);
-                // }
+                DeliveryUnit* temp = fleet.findNearestAvailable(x, y, weight);
+                if (temp != nullptr) {
+                    temp->display();
+                } else {
+                    std::cout << "no unit found to complete this delivery :(" << std::endl;
+                }
                 break;
+            }
             case 7:
                 fleet.loadOrders("orders.txt", "delivery_log.txt");
                 break;
