@@ -60,8 +60,8 @@ public:
         }
 
         Node* temp = frontNode;
-        frontNode = frontNode->next;
         item = frontNode->data;
+        frontNode = frontNode->next;
         delete(temp);
 
         count--;
