@@ -1,9 +1,6 @@
 // main.cpp
 // ESE 224 Fall 2026 Final Project (Part II) starter code
 // Team members: Ella Chen, Daniel Zhou, Logan Jeong
-//
-// This skeleton compiles and shows the menu. Fill in each TODO (Section 8).
-// You can reuse your Part I login and input-checking code.
 
 #include "DeliveryUnit.h"
 #include "Drone.h"
@@ -16,7 +13,7 @@
 
 const std::string LOG_FILE = "delivery_log.txt";
 
-// TODO: ask for a username and password until the pair is in users.txt; greet the user
+// ask for a username and password until the pair is in users.txt; greet the user
 bool login()
 {
     std::string name, pass;
@@ -58,7 +55,7 @@ bool login()
     }
 }
 
-// TODO: read every line of drones.txt until end of file. The first word is D (Drone) or H (HeavyDrone):
+// read every line of drones.txt until end of file. The first word is D (Drone) or H (HeavyDrone):
 //       create the unit with new, add it to the fleet, and print how many were loaded.
 void loadFleet(Fleet& fleet, const std::string& filename)
 {
@@ -70,6 +67,11 @@ void loadFleet(Fleet& fleet, const std::string& filename)
     std::string status;
     int count = 0;
     std::ifstream fin(filename);
+    if (!fin)
+    {
+        std::cout << "unable to open " << filename << std::endl;
+        return;
+    }
 
     while (fin>>unit_type>>name>>ID>>model>>battery>>maxPayload>>x>>y>>status) // until eof
     {
@@ -84,15 +86,31 @@ void loadFleet(Fleet& fleet, const std::string& filename)
         {
             temp = new HeavyDrone(name,ID,model,battery,maxPayload,x,y,status);
         }
-        
-        if (temp != nullptr) // add unit if successfully created
+        else
         {
-            if (fleet.addUnit(temp)) count++;
-            else delete temp; // free if couldn't add
+            std::cout << "unknown unit type '" << unit_type << "' for " << name << ", skipped" << std::endl;
+        }
+
+        // add unit if successfully created
+        if (temp != nullptr && fleet.addUnit(temp))
+        {
+            count++;
         }
     }
 
-    std::cout<<count<<" drones loaded"<<std::endl; // print how many loaded
+    std::cout<<count<<" units loaded"<<std::endl; // print how many loaded
+}
+
+bool inputFailed()
+{
+    if (std::cin.fail())
+    {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "invalid input, returning to menu" << std::endl;
+        return true;
+    }
+    return false;
 }
 
 void showMenu()
@@ -131,12 +149,13 @@ int main()
         showMenu();
         std::cout << "Choose an option: ";
         std::cin >> choice;
-        // TODO: recover from a letter (cin.clear and cin.ignore) instead of crashing or looping forever
+        // recover from a letter (cin.clear and cin.ignore) instead of crashing or looping forever
         if (std::cin.fail()) // isn't int (ie, is letter)
         {
             std::cin.clear(); // reset error flags
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // extract & discard bad input (more than just one)
             std::cout << "input failed, try again\n";
+            choice = -1;
             continue; // jump back to beginning of loop
         }
  
@@ -159,12 +178,13 @@ int main()
             { // brackets for local var declared inside case
                 std::cout << "input ID to search: ";
                 std::cin >> ID;
+                if (inputFailed()) break;
 
                 // independently run
                 DeliveryUnit* temp = fleet.findByID(ID);
                 fleet.searchTree(ID);
 
-                if (temp != nullptr) { // use findByID to determine whether id was foudn
+                if (temp != nullptr) { // use findByID to determine whether id was found
                     temp->display(); // display unit info
                 } else {
                     std::cout << "unit not found" << std::endl;
@@ -173,28 +193,30 @@ int main()
             }
             case 4: // add only if every validating mutator accepts & ID is not duplicate
             {
-                DeliveryUnit* temp = nullptr; // point to either derived class
-                
                 std::cout << "input new unit's type (D or H): ";
                 std::cin >> unit_type;
+                if (unit_type != 'D' && unit_type != 'H')
+                {
+                    std::cout << "unit type must be D or H" << std::endl;
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    break;
+                }
+
                 std::cout << "input unit's name: ";
                 std::cin >> name;
-
-                if (unit_type == 'D')
-                {
-                    temp = new Drone();
-                }
-                else if (unit_type == 'H')
-                {
-                    temp = new HeavyDrone();
-                }
-
                 std::cout << "input specs (no commas) - ID, model, battery, maxPayload, x, y, status: ";
                 std::cin >> ID >> model >> battery >> maxPayload >> x >> y >> status;
-                
+                if (inputFailed()) break;
+
+                DeliveryUnit* temp = nullptr; // point to either derived class
+                if (unit_type == 'D') temp = new Drone();
+                else temp = new HeavyDrone();
+
                 // temp-> = (*temp).
-                if (temp->setID(ID) && temp->setModel(model) && temp->setBattery(battery) && temp->setMaxPayload(maxPayload) &&temp->setPosition(0, x) && temp->setPosition(1, y) && temp->setStatus(status)) { // validate
-                    fleet.addUnit(temp);
+                temp->setName(name);
+                if (temp->setID(ID) && temp->setModel(model) && temp->setBattery(battery) && temp->setMaxPayload(maxPayload) && temp->setPosition(0, x) && temp->setPosition(1, y) && temp->setStatus(status)) { // validate
+                    if (fleet.addUnit(temp))
+                        std::cout << "added " << temp->type() << " " << ID << std::endl;
                 } else {
                     std::cout << "invalid specs / could not add unit" << std::endl;
                     delete temp;
@@ -204,12 +226,15 @@ int main()
             case 5:
                 std::cout << "input ID to remove: ";
                 std::cin >> ID;
-                fleet.removeUnit(ID);
+                if (inputFailed()) break;
+                if (fleet.removeUnit(ID))
+                    std::cout << "removed unit " << ID << std::endl;
                 break;
             case 6:
             {
                 std::cout << "input x, y, weight to find nearest available unit: ";
                 std::cin >> x >> y >> weight;
+                if (inputFailed()) break;
                 DeliveryUnit* temp = fleet.findNearestAvailable(x, y, weight);
                 if (temp != nullptr) {
                     temp->display();
@@ -219,19 +244,19 @@ int main()
                 break;
             }
             case 7:
-                fleet.loadOrders("orders.txt", "delivery_log.txt");
+                std::cout << "Loaded " << fleet.loadOrders("orders.txt", LOG_FILE) << " orders." << std::endl;
                 break;
             case 8:
-                fleet.processPending("delivery_log.txt");
+                fleet.processPending(LOG_FILE);
                 break;
             case 9:
-                fleet.undoLastDispatch("delivery_log.txt");
+                fleet.undoLastDispatch(LOG_FILE);
                 break;
             case 10:
-                fleet.rechargeAll("delivery_log.txt");
+                fleet.rechargeAll(LOG_FILE);
                 break;
             case 11:
-                fleet.retryFailed("delivery_log.txt");
+                fleet.retryFailed(LOG_FILE);
                 break;
             case 12:
                 fleet.countByStatus();

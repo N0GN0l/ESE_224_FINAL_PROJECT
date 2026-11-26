@@ -11,18 +11,26 @@
 #include <iomanip>
 #include <cmath>
 
-// Formats a double with exactly one decimal place, e.g. 30.14 -> "30.1", 6 -> "6.0"
 static std::string oneDecimal(double value)
 {
-    std::string s = std::to_string(std::round(value * 10.0) / 10.0);  // e.g. "30.100000"
-    return s.substr(0, s.find('.') + 2);                               // keep one digit after '.'
+    std::string s = std::to_string(std::round(value * 10.0) / 10.0); 
+    return s.substr(0, s.find('.') + 2);                              
 }
 
 Fleet::Fleet() : head(nullptr), count(0) {}
 
 Fleet::~Fleet()
 {
-    // TODO: delete every node AND every unit (the Fleet owns the units)
+    UnitNode* curr = head;
+    while (curr != nullptr)
+    {
+        UnitNode* next = curr->next;
+        delete curr->unit;
+        delete curr;
+        curr = next;
+    }
+    head = nullptr;
+    count = 0;
 }
 
 // ---------- Linked list ----------
@@ -94,26 +102,22 @@ DeliveryUnit* Fleet::findQuiet(int id) const
 DeliveryUnit* Fleet::findByID(int id) const
 {
     int comp = 0;
-    if (head == nullptr){
-        std::cerr << "ERROR: List is empty" << std::endl;
-        return nullptr;
-    }
-    UnitNode* curr = head;
-    while (curr->next != nullptr && curr->next->unit->getID() <= id){
+    for (UnitNode* curr = head; curr != nullptr; curr = curr->next)
+    {
         comp++;
-        curr = curr->next;
+        int currID = curr->unit->getID();
+        if (currID == id)
+        {
+            std::cout << "Linked list search: found ID " << id << " after " << comp << " comparisons." << std::endl;
+            return curr->unit;
+        }
+        if (currID > id)
+        {
+            break;
+        }
     }
-    if (curr->unit->getID() == id){
-        comp++;
-        std::cout << "Comparison count: " << comp << std::endl;
-        return curr->unit;
-    }
-    comp++;   // the final check 
-    std::cout << "Comparison count: " << comp << std::endl;
-    std::cerr << "ERROR: ID not found" << std::endl;
+    std::cout << "Linked list search: ID " << id << " not found after " << comp << " comparisons." << std::endl;
     return nullptr;
-
-    // TODO: one comparison per node examined; stop at the first larger ID; print the count
 }
 
 DeliveryUnit* Fleet::searchTree(int id) const
@@ -144,20 +148,13 @@ void Fleet::displayAll() const {
 
 void Fleet::displayTree() const
 {
-    std::cout << "in-order: " << std::endl;
+    std::cout << "In-order:   ";
     index.inOrder();
-    std::cout << std::endl;
-
-    std::cout << "post-order: " << std::endl;
-    index.postOrder();
-    std::cout << std::endl;
-
-    std::cout << "pre-order: " << std::endl;
+    std::cout << "Pre-order:  ";
     index.preOrder();
-    std::cout << std::endl;
-
-    std::cout << "Height: " << index.height() << std::endl;
-    // TODO: in-order, pre-order, post-order, and height
+    std::cout << "Post-order: ";
+    index.postOrder();
+    std::cout << "Height: " << index.height() << " (" << index.size() << " units)" << std::endl;
 }
 
 void Fleet::countByStatus() const
@@ -187,7 +184,7 @@ void Fleet::countByStatus() const
 
     std::cout << "Average battery: ";
     if (count > 0)
-        std::cout << std::fixed << std::setprecision(1) << batteryTotal / count << "%" << std::endl;
+        std::cout << oneDecimal(batteryTotal / count) << "%" << std::endl;
     else
         std::cout << "N/A (no units)" << std::endl;
 
@@ -203,11 +200,9 @@ void Fleet::writeFleetToFile(const std::string& filename) const {
         return; 
     }
     UnitNode* curr = head;
-    char type;
+    outFile << std::fixed << std::setprecision(1);
     while (curr != nullptr){
-        if (curr->unit->getModel() == "Hauler") type = 'H';
-        else type = 'D';
-        outFile << std::fixed << std::setprecision(1);
+        char type = (curr->unit->type() == "Heavy") ? 'H' : 'D';
         outFile << type << " " <<  curr->unit->getName() << " " << curr->unit->getID() <<
                 " " << curr->unit->getModel() << " " << curr->unit->getBattery() << " " <<
                 curr->unit->getMaxPayload() << " " << curr->unit->getPosition(0) << " " <<
@@ -234,7 +229,6 @@ DeliveryUnit* Fleet::findNearestAvailable(int x, int y, double weight) const
 
 void Fleet::appendLog(const std::string& logFile, const std::string& line) const
 {
-    // Prints a line and appends it to the log file
     std::cout << line << std::endl;
     std::ofstream out(logFile, std::ios::app);
     out << line << std::endl;
@@ -252,12 +246,11 @@ int Fleet::loadOrders(const std::string& orderFile, const std::string& logFile)
     int id, x, y;
     double weight;
     int loaded = 0;
-    // Read the file line by line until EOF (End of File)
     while (fin >> id >> x >> y >> weight) {
         pending.enqueue(Order{id, x, y, weight});
         loaded++;
     }
-    std::ofstream log(logFile);   // creates or wipes the file
+    std::ofstream log(logFile);  
 
     return loaded;
 }
@@ -302,7 +295,6 @@ void Fleet::processPending(const std::string& logFile)
     appendLog(logFile, "Processed " + std::to_string(processed) + " orders: "
                        + std::to_string(assigned) + " assigned, " + std::to_string(failed)
                        + " moved to retry queue. Distance flown: " + oneDecimal(totalDistance));
-    // TODO: dequeue until empty; dispatch (push a DispatchRecord first) or move to 'retry'; log each line and a summary
 }
 
 bool Fleet::undoLastDispatch(const std::string& logFile)
@@ -346,17 +338,14 @@ int Fleet::rechargeAll(const std::string& logFile)
         }
     }
 
-    // Recharged 4 units to 100%.
     appendLog(logFile, "Recharged " + std::to_string(recharged) + " units to 100%.");
     return recharged;
 }
 
 void Fleet::retryFailed(const std::string& logFile)
 {
-    // Retrying 5 orders.
     appendLog(logFile, "Retrying " + std::to_string(retry.size()) + " orders.");
 
-    // dequeue from the front, enqueue at the back: keeps the original order
     Order temp;
     while (!retry.isEmpty()){
         retry.dequeue(temp);
