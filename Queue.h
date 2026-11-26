@@ -60,9 +60,13 @@ public:
         }
 
         Node* temp = frontNode;
-        frontNode = frontNode->next;
         item = frontNode->data;
+        frontNode = frontNode->next;
         delete(temp);
+        if(frontNode == nullptr)
+        {
+            backNode = nullptr;
+        }
 
         count--;
         return true;
@@ -86,7 +90,7 @@ public:
 
     void clear()    //Clears the queue
     {
-        while(frontNode->next != nullptr)
+        while(frontNode != nullptr)
         {
             Node* temp = frontNode;
             frontNode = frontNode->next;

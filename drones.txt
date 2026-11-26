@@ -1,0 +1,17 @@
+D Swift 807 Condor 86.7 10.0 26 23 IDLE
+H Hercules 529 Hauler 83.0 22.0 3 3 IDLE
+H Goliath 454 Hauler 77.2 25.0 4 16 IDLE
+D Helix 264 Condor 91.9 10.0 20 10 CHARGING
+D Lumen 808 Condor 52.3 10.0 7 13 IDLE
+D Ion 629 Condor 68.2 10.0 15 11 IDLE
+D Pulse 226 Falcon 89.7 5.0 5 22 MAINTENANCE
+D Cinder 725 Kestrel 66.1 2.0 22 29 IDLE
+D Jet 683 Kestrel 62.5 2.0 1 29 IDLE
+H Titanus 727 Hauler 91.8 25.0 21 4 IDLE
+D Spark 579 Falcon 78.3 5.0 14 17 IDLE
+D Arrow 557 Kestrel 73.7 2.0 0 13 CHARGING
+D Zenith 474 Falcon 48.4 5.0 14 30 IDLE
+D Gale 685 Falcon 63.2 5.0 22 20 IDLE
+D Aero 260 Kestrel 55.1 2.0 20 12 IDLE
+D Umbra 145 Falcon 46.9 5.0 30 23 IDLE
+D Tempest 845 Kestrel 86.0 2.0 20 1 IDLE

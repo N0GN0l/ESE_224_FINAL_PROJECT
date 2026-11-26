@@ -27,7 +27,7 @@ public:
 
     ~Stack()
     {
-        // TODO: free every node (hint: clear())
+        // free every node (hint: clear())
         clear();
     }
 
@@ -36,7 +36,7 @@ public:
 
     void push(const T& item)
     {
-        // TODO: add a new node on top
+        // add a new node on top
         // works for an empty stack too: the new node's next is just nullptr
         topNode = new Node{item, topNode};
         count++;
@@ -44,7 +44,6 @@ public:
 
     bool pop(T& item)
     {
-        return false;
         if(isEmpty())
         {
             std::cerr<<"Stack is empty, cannot pop"<<std::endl;
@@ -80,8 +79,8 @@ public:
 
     void clear()
     {
-        // TODO: remove every node
-        while(topNode->next != nullptr)
+        // remove every node
+        while(topNode != nullptr)
         {
             Node* temp = topNode;
             topNode = topNode->next;

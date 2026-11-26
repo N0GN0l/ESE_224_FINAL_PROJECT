@@ -11,8 +11,8 @@
 
 DeliveryUnit::DeliveryUnit()
 {
-    // TODO: the Part I defaults
-    name = " ";
+    // the Part I defaults
+    name = "";
     ID = -1;
     model = "";
     battery = 100.0;
@@ -137,7 +137,6 @@ bool DeliveryUnit::canDeliver(int x, int y, double weight) const
 
 void DeliveryUnit::completeDelivery(int x, int y, double weight)
 {
-    //double-check the delivery is still possible
     if(canDeliver(x, y, weight))
     {
         //use up battery, move to the destination, and count the delivery
@@ -160,13 +159,9 @@ void DeliveryUnit::completeDelivery(int x, int y, double weight)
 
 void DeliveryUnit::undoDelivery(double oldBattery, int oldX, int oldY, const std::string& oldStatus)
 {
-    if((deliveriesCompleted - 1) >= 0)
+    if(deliveriesCompleted > 0)
     {
         deliveriesCompleted--;
-    }
-    else {
-        std::cout<<"No deliveries have been completed, cannot undo something that never happened"<<std::endl;
-        return;
     }
 
     setBattery(oldBattery);
@@ -177,7 +172,8 @@ void DeliveryUnit::undoDelivery(double oldBattery, int oldX, int oldY, const std
 
 void DeliveryUnit::display() const
 {
-    // TODO: print [type()] and every member with a label
+    // print [type] and every member with a label
+    std::cout<<"["<<type()<<"]"<<std::endl;
     std::cout<<"[name]"<<getName() <<std::endl;
     std::cout<<"[ID]"<<getID() <<std::endl;
     std::cout<<"[model]"<<getModel() <<std::endl;

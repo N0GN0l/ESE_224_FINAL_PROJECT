@@ -33,7 +33,7 @@ Drone::Drone(const std::string& n, int id, const std::string& m, double b, doubl
 
 bool Drone::setModel(const std::string& m)
 {
-    // TODO: valid when m is Kestrel, Falcon, or Condor
+    // valid when m is Kestrel, Falcon, or Condor
     if (m == "Kestrel" || m == "Falcon" || m == "Condor") 
     {
         model = m;
@@ -45,7 +45,7 @@ bool Drone::setModel(const std::string& m)
 
 double Drone::batteryNeeded(int x, int y, double weight) const
 {
-    // TODO: distance x BATTERY_PER_UNIT x (1 + PAYLOAD_FACTOR x weight)
+    // distance x BATTERY_PER_UNIT x (1 + PAYLOAD_FACTOR x weight)
     double batteryNeeded = distanceTo(x, y) * BATTERY_PER_UNIT *(1 + PAYLOAD_FACTOR * weight);
     return batteryNeeded;
 }
