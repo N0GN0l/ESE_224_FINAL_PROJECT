@@ -158,7 +158,6 @@ int main()
                 std::cout << "input ID to search: ";
                 std::cin >> ID;
 
-                // independently run
                 DeliveryUnit* temp = fleet.findByID(ID);
                 fleet.searchTree(ID);
 
@@ -187,14 +186,14 @@ int main()
                     temp = new HeavyDrone();
                 }
 
-                std::cout << "input specs (no commas) - ID, model, battery, maxPayload, x, y, status: ";
+                std::cout << "input with no commas - ID, model, battery, maxPayload, x, y, status: ";
                 std::cin >> ID >> model >> battery >> maxPayload >> x >> y >> status;
                 
                 // temp-> = (*temp).
                 if (temp->setID(ID) && temp->setModel(model) && temp->setBattery(battery) && temp->setMaxPayload(maxPayload) &&temp->setPosition(0, x) && temp->setPosition(1, y) && temp->setStatus(status)) { // validate
                     fleet.addUnit(temp);
                 } else {
-                    std::cout << "invalid specs / could not add unit" << std::endl;
+                    std::cout << "invalid specs - could not add unit" << std::endl;
                     delete temp;
                 }
                 break;
