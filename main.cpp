@@ -203,21 +203,8 @@ int main()
 
                 std::cout << "input unit's name: ";
                 std::cin >> name;
-<<<<<<< HEAD
-
-                if (unit_type == 'D')
-                {
-                    temp = new Drone();
-                }
-                else if (unit_type == 'H')
-                {
-                    temp = new HeavyDrone();
-                }
 
                 std::cout << "input with no commas - ID, model, battery, maxPayload, x, y, status: ";
-=======
-                std::cout << "input specs (no commas) - ID, model, battery, maxPayload, x, y, status: ";
->>>>>>> ec317a4e4eab0b55c292f0282a48e629ed4b4500
                 std::cin >> ID >> model >> battery >> maxPayload >> x >> y >> status;
                 if (inputFailed()) break;
 
